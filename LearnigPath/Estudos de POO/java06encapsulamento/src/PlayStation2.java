@@ -173,11 +173,13 @@ public class PlayStation2 implements InterfacePs2 {
 
     @Override
     public void ligarDesligar(Scanner sc) {
+        //Está redundante, mas futuramente outras opções de controle serão implementadas
         internoLigarDesligar(sc);
     }
 
     @Override
     public void abriConsole(Scanner sc) {
+        //Está redundante, mas futuramente outras opções de controle serão implementadas
         internoAbrirConsole(sc);
     }
 
