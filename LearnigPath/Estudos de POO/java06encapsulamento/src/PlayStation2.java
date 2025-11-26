@@ -14,28 +14,27 @@
 
 import java.util.Scanner;
 
-public class PlayStation2 {
-    Scanner sc = new Scanner(System.in);
-    private String modelo;
+public class PlayStation2 implements InterfacePs2 {
+    private final String modelo;
     private boolean bloqueado;
 
     private boolean ocupado; // Tem jogo == true / sem jogo == false
     private String jogo;
     private String estado; // ligado/desligado/aberto
 
-    public PlayStation2() {
-        this.modelo = "Slim";
-        this.bloqueado = true;
+    public PlayStation2(String parModelo, boolean parBloqueado) {
+        this.modelo = parModelo;
+        this.bloqueado = parBloqueado;
         this.ocupado = false;
         this.jogo = "";
         this.estado = "desligado";
     }
 
-    public void setLigarDesligar() {
-        if (this.estado == "ligado") {
+    private void internoLigarDesligar(Scanner sc) {
+        if (this.estado.equals("ligado")) {
             this.estado = "desligado";
             System.out.println("Desligando...\nAtividade encerrada.");
-        } else if (this.estado == "desligado" && this.ocupado) {
+        } else if (this.estado.equals("desligado") && this.ocupado) {
             this.estado = "ligado";
             System.out.println("_____________________________________");
             System.out.println(" __  __    _  _____ ____  ___ __  __");
@@ -63,7 +62,7 @@ public class PlayStation2 {
                         i++; // Incrementa i para sair do loop while (i < 1)
                         break;
                     case 2:
-                        this.getStatus();
+                        this.internoVisualizarConsole();
                         break;
                     default:
                         System.out.println("Opção inválida! Tente novamente.");
@@ -75,10 +74,17 @@ public class PlayStation2 {
         }
     }
 
-    public void getAbrirConsole() {
-        System.out.println("=====================================");
-        System.out.println("            TAMPA ABERTA             ");
-        System.out.println("=====================================");
+    private void internoAbrirConsole(Scanner sc) {
+        System.out.println("  ---------------------------------------");
+        System.out.println("  |             |                       |");
+        System.out.println("  |             |      .---------.      |");
+        System.out.println("  |     PS2     |     /     _     \\     |"); // Compartimento do disco
+        System.out.println("  |             |    |    ( O )    |    |"); // Leitor óptico no centro
+        System.out.println("  |   ///////   |    |      -      |    |");
+        System.out.println("  |             |     \\._________./     |");
+        System.out.println("  |_____________|_______________________|");
+        System.out.println("  | [MEMORY SLOT]  [OPEN]      [START]  |"); // Painel frontal
+        System.out.println("   ------------------------------------- ");
         this.estado = "aberto";
         int escolhaUsuario, i = 0;
         if (this.ocupado) {
@@ -91,7 +97,7 @@ public class PlayStation2 {
                 System.out.println("[4] Tampar novamente e voltar.");
                 System.out.println("=====================================");
                 System.out.println("Digite sua ação: ");
-                escolhaUsuario = this.sc.nextInt();
+                escolhaUsuario = sc.nextInt();
                 System.out.println("=====================================");
                 switch (escolhaUsuario) {
                     case 1:
@@ -105,11 +111,11 @@ public class PlayStation2 {
                         System.out.println(this.ocupado? "O jogo foi removido.": "Não há jogo a ser removido no console.");
                         this.ocupado = false;
                         this.jogo = "";
-                        this.estado = "deslligado";
+                        this.estado = "desligado";
                         i++;
                         break;
                     case 3:
-                        this.getStatus();
+                        this.internoVisualizarConsole();
                         break;
                     case 4:
                         this.estado = "desligado";
@@ -131,7 +137,7 @@ public class PlayStation2 {
                 System.out.println("[3] Tampar novamente e voltar.");
                 System.out.println("=====================================");
                 System.out.println("Digite sua ação: ");
-                escolhaUsuario = this.sc.nextInt();
+                escolhaUsuario = sc.nextInt();
                 System.out.println("=====================================");
                 switch (escolhaUsuario) {
                     case 1:
@@ -144,7 +150,7 @@ public class PlayStation2 {
                         i++;
                         break;
                     case 2:
-                        this.getStatus();
+                        this.internoVisualizarConsole();
                         break;
                     case 3:
                         this.estado = "desligado";
@@ -158,28 +164,25 @@ public class PlayStation2 {
         }
     }
 
-    public void getStatus() {
+    public void internoVisualizarConsole() {
         System.out.println("Bora conferir o console!");
         System.out.printf("Seu PS2 é do modelo: %s%s\n", this.modelo, this.bloqueado ? " bloqueado." : " desbloqueado.");
         System.out.printf("Atualmente ele está %s\n", this.estado);
         System.out.println(this.ocupado ? "Contém o jogo " + this.jogo + "." : "Está sem jogos no momento.");
     }
+
+    @Override
+    public void ligarDesligar(Scanner sc) {
+        internoLigarDesligar(sc);
+    }
+
+    @Override
+    public void abriConsole(Scanner sc) {
+        internoAbrirConsole(sc);
+    }
+
+    @Override
+    public void visualizarConsole() {
+        internoVisualizarConsole();
+    }
 }
-//if (desejo == "abrir" && this.estado == "rodando") {
-//            return "[ERRO] Antes, encerre a atividade corretamente.";
-//        } else if(desejo == "abrir" && (this.estado == "aberto" || this.estado == "fechado")) {
-//            this.estado = "aberto";
-//            return "Console ABERTO.";
-//        } else if(desejo == "fechar"){
-//            this.estado = "fechado";
-//            return "Console FECHADO.";
-//        } if (desejo == "rodar" && this.estado == "aberto") {
-//            return "Feche o console antes ligar.";
-//        } else if (desejo == "rodar" && !this.ocupado) {
-//            return "Insira um jogo antes de iniciar.";
-//        } else if (desejo == "rodar") {
-//            this.estado = "rodando";
-//            return "MATRIZ\nLoading...\n[EM GAME]";
-//        } else {
-//            return "[ERRO] Desejo inválido";
-//        }
