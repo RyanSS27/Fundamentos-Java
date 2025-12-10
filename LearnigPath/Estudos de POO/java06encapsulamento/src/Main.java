@@ -27,7 +27,7 @@ public class Main {
                     ps2.ligarDesligar(sc);
                     break;
                 case 2:
-                    ps2.abriConsole(sc);
+                    ps2.abrirConsole(sc);
                     break;
                 case 3:
                     ps2.visualizarConsole();
