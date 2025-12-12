@@ -1,6 +1,6 @@
 public interface Leitura {
-    public abstract void abrir();
-    public abstract void fechar();
-    public abstract void avancarPag();
-    public abstract void voltarPag();
+    public abstract String abreFecha();
+    public abstract String avancarPag();
+    public abstract String voltarPag();
+    public abstract String folhear();
 }
