@@ -1,9 +1,7 @@
-public class Aluno extends Pessoa {
+public abstract class Aluno extends Pessoa {
     private int matricula;
     private String curso;
-    public void pagarMensalidade() {
-        System.out.println("Mensalidade paga.");
-    }
+    public abstract void pagarMensalidade();
 
     public int getMatricula() {
         return matricula;
