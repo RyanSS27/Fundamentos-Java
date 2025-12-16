@@ -11,7 +11,7 @@ public final class Tecnico extends Aluno {
         return registroProfissional;
     }
 
-    @Override 
+    @Override
     public void pagarMensalidade() {
         System.out.println("Mensalidade paga.");
     }
