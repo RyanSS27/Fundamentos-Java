@@ -1,270 +1,183 @@
-🎓Lista de Exercícios - Aula 9 (Parte Teórica)
-Curso: Programação Orientada a Objetos em Java - Curso em Vídeo
+🎓Lista de Exercícios - Extra (Imagens Transcritas)
+Curso: Programação Orientada a Objetos - Variados
 
 =====================================================================
-✅Número de acertos: 13 (errei as 2 por desatenção)
+✅Número de acertos: 11/12
 =====================================================================
 
-QUESTÃO 01 (origem: CAP-PD 2006)
+QUESTÃO 01 (origem: CAP-PD 2016)
 
-Uma casa está para uma planta arquitetônica assim como um objeto está para...
+Segundo Deitel (2010) com relação à Linguagem de Programação JAVA, é correto afirmar que:
 
-a) um método
+a) um constructor pode ter um nome diferente de sua classe
 
-b) uma propriedade
+b) o compilador fornece um constructor padrão sem parâmetros em qualquer classe que não inclui explicitamente um construtor
 
-c) uma classe
+c) se uma classe não incluir um constructor, as variáveis de instância não são inicializadas
 
-d) um atributo
+d) não existe o conceito de constructor na linguagem JAVA
+
+Minha resposta: b
+Resposta correta: b
+---------------------------------------------------------------------
+
+QUESTÃO 02 (origem: CAP 2010)
+
+Uma das formas de reutilização de software é a criação de uma classe que absorve membros de outra classe já existente. A nova classe é aprimorada com capacidades novas ou modificadas.
+
+a) recursão
+
+b) herança
+
+c) orientação a aspectos
+
+d) chamada por parâmetros
+
+Minha resposta: b
+Resposta correta: b
+---------------------------------------------------------------------
+
+QUESTÃO 03 (origem: EAGS 2011)
+
+Observe o diagrama a seguir e assinale a alternativa correta, no que diz respeito à classe DecimalFormat
+[Tem uma imagem com o diagrama bonitinho. 
+Basicamente, Format é a raiz, NumberFormat é seu filho e ChoiceFormat e DecimalFormat são suas especializações.]
+[Format] <|-- [NumberFormat]
+[NumberFormat] <|-- [ChoiceFormat]
+[NumberFormat] <|-- [DecimalFormat]
+
+a) qualquer classe dada será ascendente de Format
+
+b) DecimalFormat é descendente de Format
+
+c) DecimalFormat é ancestral de Format
+
+d) ChoiceFormat é filha de DecimalFormat
+
+Minha resposta: b
+Resposta correta: b
+---------------------------------------------------------------------
+
+QUESTÃO 04 (origem: CAP 2016)
+
+Segundo Deitel (2010), fornecer uma superclasse apropriada a partir da qual outras classes podem herdar e, assim, compartilhar um design comum, é o propósito de
+
+a) um objeto
+
+b) uma subclasse
+
+c) uma classe abstrata
+
+d) um construtor
 
 Minha resposta: c
 Resposta correta: c
 ---------------------------------------------------------------------
 
-QUESTÃO 02 (origem: EAGS 2015)
+QUESTÃO 05 (origem: EAGS 2010)
 
-A programação orientada a objetos se preocupa em produzir software que tenha as seguintes características
+Entende-se por método abstrato um método
 
-a) natural, confiável, reutilizável, manutenível, extensível e oportuno
+a) declarado, mas não implementado 
 
-b) natural, mensurável, manutenível, instantâneo, acessível e confiável
+b) declarado e implementado
 
-c) confiável, reutilizável, extensível, mensurável, acessível e fácil de usar
+c) não declarado, mas implementado
 
-d) extensível, natural, mensurável, reutilizável, instantâneo e simples
+d) não declarado e não implementado
 
 Minha resposta: a
 Resposta correta: a
 ---------------------------------------------------------------------
 
-QUESTÃO 03 (origem: EAGS 2009)
+QUESTÃO 06 (origem: EAGS 2010)
 
-Assinale a alternativa incorreta com relação ao conceito de classe e objeto em Programação Orientada a Objetos.
+Informe se é falso ou verdadeiro o que se afirma sobre o conceito de herança da POO.
 
-a) Uma classe é instância de um objeto.
+( ) A herança permite basear uma nova classe na definição de outra classe
+( ) Não se pode sobrepor um comportamento de uma superclasse em uma subclasse
+( ) Com o mecanismo de herança, é possível estabelecer relacionamentos “é um” entre classes
 
-b) Um objeto é uma construção de software que encapsula estado e comportamento.
+a) V - V - F
 
-c) Uma classe define os atributos e comportamentos compartilhados por um tipo de objeto.
+b) V - F - V
 
-d) Em uma Linguagem POO pura, tudo é um objeto, desde os tipos mais básicos.
+c) V - V - V
+
+d) F - F - V
+
+Minha resposta: b
+Resposta correta: b
+---------------------------------------------------------------------
+
+QUESTÃO 07 (origem: EAGS 2016)
+
+Ao programar em PHP orientado a objetos e declarar uma classe com a palavra-chave final, conforme o código abaixo, pode-se afirmar que
+
+<?php
+    final class ClasseA {
+    
+    }
+?>
+
+a) as subclasses de ClasseA não herdarão seus métodos
+
+b) a ClasseA não poderá ser instanciada
+
+c) a ClasseA não poderá ter subclasses
+
+d) a ClasseA não poderá ter métodos
+
+Minha resposta: c
+Resposta correta: c
+---------------------------------------------------------------------
+
+QUESTÃO 08 (origem: CAP 2007)
+
+Em relação à Programação Orientada a Objetos, assinale a opção correta.
+
+a) Os membros private de uma superclasse são herdados pelas suas subclasses
+
+b) Um método public da superclasse pode tornar-se um método protected ou private na subclasse
+
+c) Um método protected da superclasse pode tornar-se um método private da subclasse
+
+d) Utilizar acesso protected oferece um nível intermediário entre public e private
+
+Minha resposta: d
+Resposta correta: d
+---------------------------------------------------------------------
+
+QUESTÃO 09 (origem: EAGS 2016)
+
+Marque a alternativa que completa corretamente a lacuna.
+
+Ao programar em PHP utilizando-se o paradigma de orientação a objeto, utiliza-se o símbolo ________ para poder acessar as funções definidas em uma classe.
+
+a) .
+
+b) >
+
+c) =>
+
+d) ->
+
+Minha resposta: d
+Resposta correta: d
+---------------------------------------------------------------------
+
+QUESTÃO 10 (origem: CAP 2016)
+
+Segundo Deitel (2010), em POO, o conceito que permite escrever programas que processam objetos que compartilham a mesma superclasse (direta e indiretamente) como se todos fossem objetos dessa superclasse, é conhecido como:
+
+a) Associação
+
+b) Polimorfismo
+
+c) Atributo
+
+d) Encapsulamento
 
 Minha resposta: a
-Resposta correta: a
----------------------------------------------------------------------
-
-QUESTÃO 04 (origem: EAGS 2012)
-
-Correlacione a coluna da esquerda com a da direita e assinale a alternativa que contém a sequência correta.
-
-(1) Atributo (2) Classe (3) Comportamento (4) Domínio (5) Objeto
-
-( ) ação executada por um objeto
-
-( ) define os atributos e comportamentos comuns
-
-( ) característica de uma classe que é visível
-
-( ) construção de software que encapsula estado e comportamento.
-
-( ) espaço onde o problema reside
-
-Minha resposta: 3, 2, 1, 5, 4
-Resposta correta: 3, 2, 1, 5, 4
----------------------------------------------------------------------
-
-QUESTÃO 05 (origem: EAGS 2009)
-
-Assinale a alternativa incorreta sobre a definição de termos usados em POO:
-
-a) Uma variável interna é um valor mantido dentro do objeto.
-
-b) Atributos são as características de uma classe visíveis externamente.
-
-c) Comportamento são as características de uma classe invisíveis externamente.
-
-d) O estado de um objeto é o significado combinado das variáveis internas do objeto.
-
-Minha resposta: d
-Resposta correta: c
----------------------------------------------------------------------
-
-QUESTÃO 06 (origem: EAGS 2013)
-
-Associe as colunas e a seguir marque a opção que contém a sequência correta:
-
-(1) construtor (2) acessor (3) mutante (4) tipos
-
-( ) métodos que dão acesso aos dados internos
-
-( ) define as diferentes espécies de valores que podem ser usados
-
-( ) métodos que permitem que se altere o estado de um objeto
-
-( ) métodos usados para inicializar objetos durante a instanciação
-
-a) 1, 2, 3, 4
-
-b) 2, 4, 1, 3
-
-c) 2, 4, 3, 1
-
-d) 4, 2, 3, 1
-
-Minha resposta: c
-Resposta correta: c
----------------------------------------------------------------------
-
-QUESTÃO 07 (origem: EAGS 2014)
-
-Quais são os três pilares da Programação Orientada a Objetos?
-
-a) herança, polimorfismo e instância
-
-b) herança, polimorfismo e metodologia
-
-c) encapsulamento, herança e polimorfismo
-
-d) encapsulamento, polimorfismo e metodologia
-
-Minha resposta: c
-Resposta correta: c
----------------------------------------------------------------------
-
-QUESTÃO 08 (origem: EAGS 2013)
-
-Correlacione a coluna da esquerda com a da direita e assinale a alternativa que contém a sequência correta.
-
-(1) Classe (2) Interface (3) Construtor (4) Objeto
-
-( ) define o que uma entidade pode fazer com o objeto
-
-( ) instanciação de uma classe
-
-( ) Define os atributos e comportamentos compartilhados
-
-( ) utilizado para inicializar objetos
-
-a) 1, 2, 4, 3
-
-b) 1, 4, 2, 3
-
-c) 2, 3, 1, 4
-
-d) 2, 4, 1, 3
-
-Minha resposta: d
-Resposta correta: d
----------------------------------------------------------------------
-
-
-QUESTÃO 09 (origem: EAGS 2010)
-
-A maioria das linguagens orientadas a objetos suporta quais níveis de acesso?
-
-a) secreto, público e primário
-
-b) público, protegido e privado
-
-c) público, protegido e primário
-
-d) público, privado e secundário
-
-Minha resposta: b
 Resposta correta: b
 ---------------------------------------------------------------------
-
-QUESTÃO 10 (origem: EAGS 2011)
-
-No contexto dos níveis de acesso, selecione a alternativa que contém o nível que apenas garante o acesso para aquele objeto e suas subclasses.
-
-a) público
-
-b) protegido
-
-c) privado
-
-d) oculto
-
-Minha resposta: b
-Resposta correta: b
----------------------------------------------------------------------
-
-QUESTÃO 11 (origem: CAP-PD 2009)
-
-A proteção de atributos e operações das classes, fazendo com que estas se comuniquem com o meio externo por meio de suas interfaces, define o conceito de
-
-a) polimorfismo
-
-b) encapsulamento
-
-c) herança
-
-d) agregação
-
-Minha resposta: b
-Resposta correta: b
----------------------------------------------------------------------
-
-QUESTÃO 12 (origem: CAP-PD 2009)
-
-Quando se utiliza o conceito de encapsulamento da POO, enquanto a ____________ define os detalhes internos do componente, a ____________ lista os serviços fornecidos por ele.
-
-a) interface - implementação
-
-b) classe-implementação
-
-c) interface-classe
-
-d) implementação - interface
-
-Minha resposta: b
-Resposta correta: d
----------------------------------------------------------------------
-
-QUESTÃO 13 (origem: EAGS 2011)
-
-___________ é a característica da POO que permite separar o programa em várias partes menores e independentes. Cada parte possui sua implementação isolada e realiza seu trabalho de forma autônoma. Com essa característica é possível ocultar os detalhes internos de cada parte através de uma interface.
-
-a) herança
-
-b) hierarquia
-
-c) polimorfismo
-
-d) encapsulamento
-
-Minha resposta: d
-Resposta correta: d
----------------------------------------------------------------------
-
-QUESTÃO 14 (origem: CAP-PD 2014)
-
-Qual é o conceito de POO que significa representar uma entidade, incluindo apenas seus atributos mais relevantes?
-
-a) encapsulamento
-
-b) polimorfismo
-
-c) herança
-
-d) abstração
-
-Minha resposta: d
-Resposta correta: d
----------------------------------------------------------------------
-
-QUESTÃO 15 (origem: CAP-PD 2014)
-
-Com relação aos conceitos de POO, assinale a opção incorreta.
-
-a) classes são tipos abstratos de dados
-
-b) objetos são instâncias de uma classe
-
-c) subclasse é uma classe definida por meio de outra classe
-
-d) atributos são subprogramas que definem as operações em objetos de uma classe
-
-Minha resposta: d
-Resposta correta: d
