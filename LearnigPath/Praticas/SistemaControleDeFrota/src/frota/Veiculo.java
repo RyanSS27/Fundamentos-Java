@@ -20,6 +20,7 @@ public abstract class Veiculo {
     protected float tanque; // litros vigentes
     protected boolean emManutencao;
     protected boolean limpo;
+    protected boolean quebrado;
     protected boolean emCondicaoDeUso;
     protected float quilometragem;
 
