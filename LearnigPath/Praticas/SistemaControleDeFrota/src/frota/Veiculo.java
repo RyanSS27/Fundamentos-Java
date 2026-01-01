@@ -1,10 +1,8 @@
 package frota;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public abstract class Veiculo {
     private static int qtdeVeiculos;
-    
+
     // Atributos
     protected String marca;
     protected String modelo;
@@ -23,7 +21,17 @@ public abstract class Veiculo {
     protected boolean emManutencao;
     protected boolean limpo;
     protected boolean emCondicaoDeUso;
-    private float quilometragem;
+    protected float quilometragem;
+
+    public Veiculo(String marca, String modelo, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
+        qtdeVeiculos++;
+        this.modelo = modelo;
+        this.marca = marca;
+        this.categoria = categoria;
+        this.qtdeMaxOcupantes = qtdeMaxOcupantes;
+        this.capacidadeMaximaTanque = capacidadeMaximaTanque;
+        this.quilometragem = quilometragem;
+    }
 
     private void novoVeiculo() {
         qtdeVeiculos++;
