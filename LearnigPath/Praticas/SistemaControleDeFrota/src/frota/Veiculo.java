@@ -210,11 +210,12 @@ public abstract class Veiculo implements InterfaceVeiculo {
     }
 
     public boolean isEmCondicaoDeUso() {
+        this.setEmCondicaoDeUso();
         return emCondicaoDeUso;
     }
 
-    public void setEmCondicaoDeUso(boolean emCondicaoDeUso) {
-        this.emCondicaoDeUso = emCondicaoDeUso;
+    public void setEmCondicaoDeUso() {
+        this.emCondicaoDeUso = (getTanquePorcentagem() >= 30.0f) && !this.emManutencao && this.limpo && !this.quebrado;
     }
 
     public float getQuilometragem() {
