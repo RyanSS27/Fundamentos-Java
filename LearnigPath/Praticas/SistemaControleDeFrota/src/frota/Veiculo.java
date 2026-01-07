@@ -7,6 +7,8 @@ public abstract class Veiculo implements InterfaceVeiculo {
     private String marca;
     private String modelo;
     private String categoria;
+    private float valor;
+    private float taxaDesvalorizacao;
     /*
     A: Duas ou três rodas (motos, motonetas, triciclos).
     B: Veículos de passeio, SUVs, picapes, vans leves (até 3.500kg e 8 lugares).
@@ -224,5 +226,29 @@ public abstract class Veiculo implements InterfaceVeiculo {
 
     public void setQuilometragem(float quilometragem) {
         this.quilometragem = quilometragem;
+    }
+
+    public float getValor() {
+        return valor;
+    }
+
+    public void setValor(float valor) {
+        this.valor = valor;
+    }
+
+    public float getTaxaDesvalorizacao() {
+        return taxaDesvalorizacao;
+    }
+
+    public void setTaxaDesvalorizacao(float taxaDesvalorizacao) {
+        this.taxaDesvalorizacao = taxaDesvalorizacao;
+    }
+
+    public void setEmCondicaoDeUso(boolean emCondicaoDeUso) {
+        this.emCondicaoDeUso = emCondicaoDeUso;
+    }
+
+    public double calcularValorComDesvalorizacao() {
+        return this.valor * (1 - (this.taxaDesvalorizacao / 100.0));
     }
 }

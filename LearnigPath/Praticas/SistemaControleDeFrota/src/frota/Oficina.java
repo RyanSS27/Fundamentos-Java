@@ -4,9 +4,17 @@ package frota;
 // * Analisar o estado do carro após a devolução e, se quebrado,
 //   calcular a multa com base na gravidade do dano
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public abstract class Oficina {
-    // CHECKUP NÃO TERMINADO
     public static String checkup(Veiculo automovel) {
+        /*
+            Descrição da função:
+            Realiza um checkup minucioso das condições de uso do veículo
+            no momento sem as alterar, podendo ser solicitado por
+            qualquer requerente do sistema.
+        */
+
         //Verifica se está em condição de uso antes de fazer a busca pela razão
         if (automovel.isEmCondicaoDeUso()) {
             int testeQualidade = 0;
@@ -67,6 +75,7 @@ public abstract class Oficina {
                 """.formatted(automovel.getQuilometragem(), automovel.getTanquePorcentagem());
             return msgBase += obs + recomendacoes;
         } else {
+            // Se estiver em condições, retorna a mensagem
             return """
                     ===========================================================
                                   RELATÓRIO DE CONDIÇÃO DO VEÍCULO
@@ -79,7 +88,27 @@ public abstract class Oficina {
         }
     }
 
-    public void preparacao(Veiculo automovel) {
-        
+    // Analisa o veículo após o retorno
+    public int revisaoPosUso(Veiculo automovel) {
+        /*
+            Simula a atuação dos mecânicos, por não haver atores que
+            entrem com as condições do veículo e calcula os custos
+            de manutenção e multa para o cliente conforme a
+            gravidade do problema.
+         */
+
+        // Chance de 1/4 de estar quebrado
+        int chanceQuebra = ThreadLocalRandom.current().nextInt(1, 5);
+        /*
+                0 = não há danos
+                1-3 (3/10) = danos comuns de desgaste/uso
+                4-9 (6/10) = danos por má conduta
+                10 (1/10) = pt no carro
+             */
+        if (chanceQuebra == 1) {
+            return ThreadLocalRandom.current().nextInt();
+        } else {
+            return 0;
+        }
     }
 }
