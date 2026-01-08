@@ -24,6 +24,7 @@ public abstract class Veiculo implements InterfaceVeiculo {
     private boolean limpo;
     private boolean quebrado;
     private boolean emCondicaoDeUso;
+    private int nivelDano;
     private float quilometragem;
 
     public Veiculo(String marca, String modelo, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
@@ -250,5 +251,13 @@ public abstract class Veiculo implements InterfaceVeiculo {
 
     public double calcularValorComDesvalorizacao() {
         return this.valor * (1 - (this.taxaDesvalorizacao / 100.0));
+    }
+
+    public int getNivelDano() {
+        return nivelDano;
+    }
+
+    public void setNivelDano(int nivelDano) {
+        this.nivelDano = nivelDano;
     }
 }

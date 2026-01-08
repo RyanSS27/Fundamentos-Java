@@ -1,12 +1,13 @@
 package frota;
 // * Deve realizar o checkup da situação do carro para locação
 // * Deve consertá-lo para as condições mínimas de locação nome: preparação
-// * Analisar o estado do carro após a devolução e, se quebrado,
-//   calcular a multa com base na gravidade do dano
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Oficina {
+    private static int reservaGasolina;
+
+    // Realiza o checkup da situação do carro para locação
     public static String checkup(Veiculo automovel) {
         /*
             Descrição da função:
@@ -88,7 +89,7 @@ public abstract class Oficina {
         }
     }
 
-    // Analisa o veículo após o retorno
+    // Analisa o veículo após o uso do cliente
     public int revisaoPosUso(Veiculo automovel) {
         /*
             Simula a atuação dos mecânicos, por não haver atores que
@@ -100,15 +101,28 @@ public abstract class Oficina {
         // Chance de 1/4 de estar quebrado
         int chanceQuebra = ThreadLocalRandom.current().nextInt(1, 5);
         /*
-                0 = não há danos
-                1-3 (3/10) = danos comuns de desgaste/uso
-                4-9 (6/10) = danos por má conduta
-                10 (1/10) = pt no carro
-             */
+            0 = não há danos
+            1-3 (3/10) = danos comuns de desgaste/uso
+            4-9 (6/10) = danos por má conduta
+            10 (1/10) = pt no carro
+        */
         if (chanceQuebra == 1) {
-            return ThreadLocalRandom.current().nextInt();
+            int nivelDano = ThreadLocalRandom.current().nextInt();
+            automovel.setNivelDano(nivelDano);
+            return nivelDano;
         } else {
+            automovel.setNivelDano(0);
             return 0;
         }
+    }
+
+    // Realiza o conserto do veículo
+    public void concerto(Veiculo automovel) {
+
+    }
+
+    // Realiza a preparação completa do veículo para locação
+    public void preparacao(Veiculo automovel) {
+        
     }
 }
