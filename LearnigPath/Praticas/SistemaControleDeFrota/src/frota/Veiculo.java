@@ -1,9 +1,10 @@
 package frota;
 
 public abstract class Veiculo implements InterfaceVeiculo {
-    private static int qtdeVeiculos;
+    private static int qtdeVeiculosMembrosDaFrota;
 
     // Atributos
+    private String placa;
     private String marca;
     private String modelo;
     private String categoria;
@@ -27,18 +28,15 @@ public abstract class Veiculo implements InterfaceVeiculo {
     private int nivelDano;
     private float quilometragem;
 
-    public Veiculo(String marca, String modelo, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
-        qtdeVeiculos++;
+    public Veiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
+        qtdeVeiculosMembrosDaFrota++;
+        this.placa = placa.toUpperCase();
         this.modelo = modelo;
         this.marca = marca;
         this.categoria = categoria;
         this.qtdeMaxOcupantes = qtdeMaxOcupantes;
         this.capacidadeMaximaTanque = capacidadeMaximaTanque;
         this.quilometragem = quilometragem;
-    }
-
-    private void novoVeiculo() {
-        qtdeVeiculos++;
     }
 
     protected void rodar(float quilometros) {
@@ -119,15 +117,6 @@ public abstract class Veiculo implements InterfaceVeiculo {
     }
 
     //Getters e Setters
-
-    public static int getQtdeVeiculos() {
-        return qtdeVeiculos;
-    }
-
-    public static void setQtdeVeiculos(int qtdeVeiculos) {
-        Veiculo.qtdeVeiculos = qtdeVeiculos;
-    }
-
     public String getMarca() {
         return marca;
     }
@@ -259,5 +248,13 @@ public abstract class Veiculo implements InterfaceVeiculo {
 
     public void setNivelDano(int nivelDano) {
         this.nivelDano = nivelDano;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa.toUpperCase();
+    }
+
+    public String getPlaca() {
+        return this.placa.toUpperCase();
     }
 }

@@ -9,7 +9,7 @@ public interface InterfaceVeiculo {
     */
 
     public abstract String abastecer(String maxOuMin);
-    public abstract void consertar();
+    public abstract void serConsertado();
     public abstract void lavar();
 
     /*

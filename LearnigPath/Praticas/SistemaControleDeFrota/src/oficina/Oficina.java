@@ -1,6 +1,8 @@
-package frota;
+package oficina;
 // * Deve realizar o checkup da situação do carro para locação
 // * Deve consertá-lo para as condições mínimas de locação nome: preparação
+
+import frota.Veiculo;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -90,12 +92,11 @@ public abstract class Oficina {
     }
 
     // Analisa o veículo após o uso do cliente
-    public int revisaoPosUso(Veiculo automovel) {
+    public Relatorio revisaoPosUso(Veiculo automovel) {
         /*
             Simula a atuação dos mecânicos, por não haver atores que
-            entrem com as condições do veículo e calcula os custos
-            de manutenção e multa para o cliente conforme a
-            gravidade do problema.
+            entrem com as condições do veículo e retorna se há algum
+            problema ou não e, se sim, retorna a gravidade.
          */
 
         // Chance de 1/4 de estar quebrado
@@ -109,20 +110,63 @@ public abstract class Oficina {
         if (chanceQuebra == 1) {
             int nivelDano = ThreadLocalRandom.current().nextInt();
             automovel.setNivelDano(nivelDano);
-            return nivelDano;
+            String possivelCausa;
+
+            // Simula entrada de descrições dos mecânicos
+            String descricao = switch (nivelDano) {
+                case 1, 2, 3 -> {
+                    possivelCausa = "Uso regular do veículo em vias urbanas.";
+                    yield "Danos comuns de desgaste/uso";
+                }
+                case 4, 5, 6, 7, 8, 9 -> {
+                    possivelCausa = "Falta de manutenção preventiva ou condução imprudente.";
+                    yield "Danos por má conduta";
+                }
+                case 10 -> {
+                    possivelCausa = "Podemos dizer que ele APARENTEMENTE perdeu a briga com o poste.";
+                    yield "PT no carro";
+                }
+                default -> {
+                    possivelCausa = "Nível não identificado.";
+                    yield "Valor inválido";
+                }
+            };
+            return relatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
         } else {
             automovel.setNivelDano(0);
-            return 0;
+            String descricao = "Não há danos";
+            String possivelCausa = "Nenhum incidente registrado. Orgulho do Detran.";
+            return relatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
         }
     }
 
+    // Relatorio de condição
+    public RelatorioCondicao relatorioCondicao(String placa, String possivelCausa, String descricao, int nivelDano) {
+        return new RelatorioCondicao(placa, possivelCausa, descricao, nivelDano);
+    }
     // Realiza o conserto do veículo
-    public void concerto(Veiculo automovel) {
+    public RelatorioConserto conserto(Veiculo automovel) {
+        if (automovel.getNivelDano() == 10) {
+            
+        } else {
+            int nivelDano = automovel.getNivelDano();
+            // Simula um custo por manutenção
+            float valorMin = nivelDano * 100;
+            float valorMax = nivelDano * 1500;
+            float custo = ThreadLocalRandom.current().nextFloat(valorMin, valorMax);
+
+            // Simula a entrada dos mecânicos
+            String possivelCausa = nivelDano <= 3? "Veículo tava cansado chefia, defeito de uso." : "Tirem a CNH dessa pessoa, não há veículo que aguente esse barbeiro.";
+            String descricaoConserto = "Trocamos a rebimboca da parafuseta e os tubos metálicos de serpentina. A parada ficou sinistra.";
+            automovel.serConsertado();
+
+            return new RelatorioConserto(automovel.getIdVeiculo(), custo, possivelCausa, descricaoConserto, nivelDano);
+        }
 
     }
 
     // Realiza a preparação completa do veículo para locação
     public void preparacao(Veiculo automovel) {
-        
+
     }
 }
