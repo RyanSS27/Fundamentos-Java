@@ -1,5 +1,7 @@
 package frota;
 
+import oficina.Oficina;
+
 public abstract class Veiculo implements InterfaceVeiculo {
     private static int qtdeVeiculosMembrosDaFrota;
 
@@ -46,73 +48,32 @@ public abstract class Veiculo implements InterfaceVeiculo {
     }
 
     @Override
-    public String abastecer(float litros) {
-        if (getTanque() + litros > getCapacidadeMaximaTanque()) {
-            float excedente = (getTanque() + litros) - getCapacidadeMaximaTanque();
-            setTanque(getCapacidadeMaximaTanque());
-            return """
-                    ===========================================================
-                                      RELATÓRIO ABASTECIMENTO
-                    ===========================================================
-                    A quantidade desejada excede a capacidade máxima do tanque.
-                    Foram abastecidos: %.1fl
-                    Excedente: %.1fl
-                    Estado do tanque: 100%%
-                    
-                    """.formatted((litros - excedente), excedente);
-        } else {
-            setTanque(getTanque() + litros);
-            return """
-                    ===========================================================
-                                      RELATÓRIO ABASTECIMENTO
-                    ===========================================================
-                    A quantidade desejada excede a capacidade máxima do tanque.
-                    Foram abastecidos: %.1fl
-                    Estado do tanque: %.1f%%
-                    """.formatted(litros, getTanquePorcentagem());
+    public float abastecer(float litros) {
+        float espacoLivre = capacidadeMaximaTanque - tanque;
+        /*
+            Nota particular:
+            Pega o menor valor encontrado na comparação entre os 2 valores,
+            assim, a quantidade desejada nunca vai ser maior que o espaço
+            livre e a qtde de litros desejados nunca excederá a capacidade
+            do tanque.
+         */
+        float litrosAbastecidos = Math.min(litros, espacoLivre);
+        this.tanque += litrosAbastecidos;
+        return litrosAbastecidos;
+    }
+
+    @Override
+    public void serConsertado() {
+        if (emManutencao && nivelDano != 10) {
+            this.nivelDano = 0;
+            this.quebrado = false;
         }
     }
 
     @Override
-    public String abastecer(String minOuMax) {
-        // Calc: tanque*100/capacidade < capacidade/3
-        // REFATORE ESSA FUNÇÂO ATRIBUINDO A LÓGICA DAS MENSAGENS À Oficina
-        if (minOuMax.equals("min")) {
-            if (getTanque() >= getCapacidadeMaximaTanque()/3.0f) {
-                return """
-                        ===========================================================
-                                          RELATÓRIO ABASTECIMENTO
-                        ===========================================================
-                        Tanque já contém combustível suficiente.
-                        Abastecimento não necessário.
-                        Estado do tanque: %.1f%%
-                       """.formatted(getTanquePorcentagem());
-            } else {
-                // Fazer ele abastecer até o mínimo indicado
-                float litrosAbastecidos = getCapacidadeMaximaTanque()/3 - getTanque();
-                return """
-                        ===========================================================
-                                          RELATÓRIO ABASTECIMENTO
-                        ===========================================================
-                        Tanque com combustível suficente para locação.
-                        Litros abastecidos: %.2f
-                        Estado do tanque: %.1f%%
-                        """.formatted(litrosAbastecidos, getTanquePorcentagem());
-            }
-        } else if (minOuMax.equals("max")) {
-            float litrosAbastecidos = getCapacidadeMaximaTanque() - getTanque();
-            setTanque(getTanque() + litrosAbastecidos);
-            return """
-                        ===========================================================
-                                          RELATÓRIO ABASTECIMENTO
-                        ===========================================================
-                        Tanque cheio.
-                        Litros abastecidos: %.2fl
-                        Estado do tanque: %.1f%%
-                       """.formatted(litrosAbastecidos, getTanquePorcentagem());
-        } else {
-            return "Entrada inválida. Entre com 'mas' ou 'min' para abastecer até\n" +
-                    "a mínima condição viável para locação.";
+    public void lavar() {
+        if(emManutencao) {
+            this.limpo = true;
         }
     }
 
@@ -207,7 +168,7 @@ public abstract class Veiculo implements InterfaceVeiculo {
     }
 
     public void setEmCondicaoDeUso() {
-        this.emCondicaoDeUso = (getTanquePorcentagem() >= 30.0f) && !this.emManutencao && this.limpo && !this.quebrado;
+        this.emCondicaoDeUso = (getTanquePorcentagem() >= (Oficina.CAPACIDADE_MINIMA_GASOLINA_LOCACAO * 10)) && !this.emManutencao && this.limpo && !this.quebrado;
     }
 
     public float getQuilometragem() {
@@ -234,10 +195,6 @@ public abstract class Veiculo implements InterfaceVeiculo {
         this.taxaDesvalorizacao = taxaDesvalorizacao;
     }
 
-    public void setEmCondicaoDeUso(boolean emCondicaoDeUso) {
-        this.emCondicaoDeUso = emCondicaoDeUso;
-    }
-
     public double calcularValorComDesvalorizacao() {
         return this.valor * (1 - (this.taxaDesvalorizacao / 100.0));
     }
@@ -248,6 +205,9 @@ public abstract class Veiculo implements InterfaceVeiculo {
 
     public void setNivelDano(int nivelDano) {
         this.nivelDano = nivelDano;
+        if (nivelDano > 0) {
+            quebrado = true;
+        }
     }
 
     public void setPlaca(String placa) {

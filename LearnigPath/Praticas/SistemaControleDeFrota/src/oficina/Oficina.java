@@ -7,7 +7,17 @@ import frota.Veiculo;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Oficina {
-    private static int reservaGasolina;
+    // Deve-se ter 1/3 do tanque para o carro poder ser alugado
+    public static final float CAPACIDADE_MINIMA_GASOLINA_LOCACAO = 3.0f;
+    private static float reservaGasolina;
+
+    public static void setReservaGasolina(float litros) {
+        reservaGasolina += litros;
+    }
+
+    public static float getReservaGasolina() {
+        return reservaGasolina;
+    }
 
     // Realiza o checkup da situação do carro para locação
     public static String checkup(Veiculo automovel) {
@@ -131,23 +141,23 @@ public abstract class Oficina {
                     yield "Valor inválido";
                 }
             };
-            return relatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
+            return new RelatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
         } else {
             automovel.setNivelDano(0);
-            String descricao = "Não há danos";
-            String possivelCausa = "Nenhum incidente registrado. Orgulho do Detran.";
-            return relatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
+            String descricao = "PT no carro.";
+            String possivelCausa = "Podemos dizer que ele APARENTEMENTE perdeu a briga com o poste.";
+            return new RelatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
         }
     }
 
-    // Relatorio de condição
-    public RelatorioCondicao relatorioCondicao(String placa, String possivelCausa, String descricao, int nivelDano) {
-        return new RelatorioCondicao(placa, possivelCausa, descricao, nivelDano);
-    }
     // Realiza o conserto do veículo
-    public RelatorioConserto conserto(Veiculo automovel) {
+    public Relatorio conserto(Veiculo automovel) {
         if (automovel.getNivelDano() == 10) {
-            
+            String descricao = "PT no carro.";
+            String possivelCausa = "Podemos dizer que ele APARENTEMENTE perdeu a briga com o poste.";
+            return new RelatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
+        } else if (automovel.getNivelDano() == 0) {
+            return new RelatorioCondicao(automovel.getPlaca(), "Veículo em ótimo estado", "Sem erros encontrados.", automovel.getNivelDano());
         } else {
             int nivelDano = automovel.getNivelDano();
             // Simula um custo por manutenção
@@ -158,15 +168,120 @@ public abstract class Oficina {
             // Simula a entrada dos mecânicos
             String possivelCausa = nivelDano <= 3? "Veículo tava cansado chefia, defeito de uso." : "Tirem a CNH dessa pessoa, não há veículo que aguente esse barbeiro.";
             String descricaoConserto = "Trocamos a rebimboca da parafuseta e os tubos metálicos de serpentina. A parada ficou sinistra.";
+            automovel.setEmManutencao(true);
             automovel.serConsertado();
 
-            return new RelatorioConserto(automovel.getIdVeiculo(), custo, possivelCausa, descricaoConserto, nivelDano);
+            return new RelatorioConserto(automovel.getPlaca(), custo, possivelCausa, descricaoConserto, nivelDano);
         }
-
     }
 
     // Realiza a preparação completa do veículo para locação
-    public void preparacao(Veiculo automovel) {
+    public String preparacao(Veiculo automovel) {
+        if (automovel.getNivelDano() == 10) {
+            return """
+                    ===========================================================
+                                  RELATÓRIO DE CONDIÇÃO DE USO
+                    ===========================================================
+                    Carro inutilizável.
+                    Razão: Perda total.
+                    """;
+        }
+        String relatorioFinal = abastecer(automovel, "min");
+        Relatorio relatorioConcerto = conserto(automovel);
+        relatorioFinal += "\n" + relatorioConcerto.relatorioExtenso();
+        automovel.lavar();
+        automovel.setEmCondicaoDeUso();
+        // Tira o carro ou não da manutenção
+        automovel.setEmManutencao(!automovel.isEmCondicaoDeUso());
+        String notaDeCondicao = automovel.isEmCondicaoDeUso()?
+                "Inápto no momento." : "Veículo nos trinques chefia, pronto para locação.";
+        return """
+                ===========================================================
+                              RELATÓRIO DE CONDIÇÃO DE USO
+                ===========================================================
+                Condição: %s
+                Relatório: 
+                %s
+                
+                Obs: contate a oficina para mais detalhes do carro.
+                """.formatted(notaDeCondicao, relatorioFinal);
+    }
 
+    // Abastece conforme a quantidade desejada de litros
+    public String abastecer(Veiculo automovel, float litrosDesejados) {
+        if (reservaGasolina <= 0) {
+            return "Erro: Reserva da oficina vazia.";
+        }
+
+        // Verifica o que a oficina pode fornecer
+        float disponivelParaUso = Math.min(litrosDesejados, reservaGasolina);
+
+        // O veículo processa quanto desses litros cabem no tanque
+        float litrosAbastecidos = automovel.abastecer(disponivelParaUso);
+
+        // Deduz da reserva apenas o que saiu para o tanque
+        reservaGasolina -= litrosAbastecidos;
+
+        // O excedente é a diferença entre o que o usuário queria e o que coube/tinha
+        float testeAbastecimento = litrosDesejados - litrosAbastecidos;
+        String notaControle;
+
+        /*
+            Ou o carro abasteceu conforme o desejado ou ele abasteceu menos,
+            já que não pode ter abastecido mais que o desejado.
+         */
+        if (testeAbastecimento == 0) {
+            notaControle =  "A quantidade desejada foi abastecida.";
+        } else {
+            /*
+                Se os litrosAbastecidos foram menores que a qtde desejada
+                (testeAbastecimento > 0) pode-se ter ocorrido 2 coisas:
+                1° Oficina não ter gasolina suficiente
+                2° O carro não suportar tantos litros em sua capacidade,
+                abastecendo somente o necessário para encher o tanque
+             */
+            notaControle = "Foram abastecidos menos litros que o desejado ";
+            if(automovel.getTanquePorcentagem() == 100) {
+                notaControle += "pois excedia a capacidade máxima do tanque.";
+            } else {
+                notaControle += "pois não há combustível suficiente na reserva da oficina.";
+            }
+        }
+
+        return gerarRelatorio(litrosAbastecidos, notaControle, automovel.getTanquePorcentagem());
+    }
+
+    // Enche o tanque ou preenche o mínimo de combustível para locação
+    public String abastecer(Veiculo automovel, String minOuMax) {
+        if ("min".equalsIgnoreCase(minOuMax)) {
+            float nivelMinimo = automovel.getCapacidadeMaximaTanque() / 3.0f;
+
+            if (automovel.getTanque() >= nivelMinimo) {
+                return "Nada a fazer: Veículo já possui combustível suficiente.";
+            }
+
+            float necessarioParaCompletar = nivelMinimo - automovel.getTanque();
+            return abastecer(automovel, necessarioParaCompletar);
+        }
+
+        if ("max".equalsIgnoreCase(minOuMax)) {
+            float necessidadeTotal = automovel.getCapacidadeMaximaTanque() - automovel.getTanque();
+            return abastecer(automovel, necessidadeTotal);
+        }
+
+        return "Erro: Opção '" + minOuMax + "' inválida. Use 'min' ou 'max'.";
+    }
+
+    // Relatorio de abastecimento
+    private String gerarRelatorio(float abastecido, String notaControle, float porcentagem) {
+        return """
+                ===========================================================
+                                  RELATÓRIO ABASTECIMENTO
+                ===========================================================
+                Foram abastecidos: %.1fl
+                Nota de controle: %s
+                Estado do tanque: %.1f%%
+            
+                """.formatted(abastecido, notaControle, porcentagem);
     }
 }
