@@ -1,3 +1,5 @@
+package exercicioGerirEstoque;
+
 import java.util.Scanner;
 
 public class Program {
@@ -97,5 +99,6 @@ public class Program {
             }
 
         } while (opt != 3);
+        sc.close();
     }
 }

@@ -1,3 +1,5 @@
+package exercicioGerirEstoque;
+
 public class Produtos {
     private String nome;
     private String descricao;
