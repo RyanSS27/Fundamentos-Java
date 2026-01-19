@@ -29,7 +29,7 @@ public abstract class Oficina {
         */
 
         //Verifica se está em condição de uso antes de fazer a busca pela razão
-        if (automovel.isEmCondicaoDeUso()) {
+        if (!automovel.isEmCondicaoDeUso()) {
             int testeQualidade = 0;
             float tanque = automovel.getTanque();
             float capacidade = automovel.getCapacidadeMaximaTanque();
@@ -74,7 +74,7 @@ public abstract class Oficina {
                     recomendacoes += ";\n- Espere o termino da manutenção para solicitar o envio do carro ao pátio";
                 } else {
                     obs += " está na oficina";
-                    recomendacoes += "\n- Solicitar o envio do carro ao pátio";
+                    recomendacoes += "\n- Solicitar o envio do carro ao pátio através da preparação.";
                 }
             }
 
@@ -200,7 +200,7 @@ public abstract class Oficina {
                               RELATÓRIO DE CONDIÇÃO DE USO
                 ===========================================================
                 Condição: %s
-                Relatório: 
+                Relatório:
                 %s
                 
                 Obs: contate a oficina para mais detalhes do carro.
