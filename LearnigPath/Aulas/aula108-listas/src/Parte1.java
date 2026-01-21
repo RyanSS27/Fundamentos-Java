@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Parte1 {
@@ -8,6 +9,7 @@ public class Parte1 {
         listCompras.add("Óleo");
         listCompras.add("Detergente");
         listCompras.add("Lâmpada");
+        listCompras.add("Linguiça");
 
         System.out.println("------------------");
         for (String item : listCompras) {
@@ -41,5 +43,19 @@ public class Parte1 {
         }
         System.out.println("------------------");
         System.out.println("Ovo está na pos: " + listCompras.indexOf("Ovo"));
+
+        // testes aleatórios
+        System.out.println("------------------");
+        listCompras.forEach(item -> System.out.println(item));
+        listCompras.add(1, "Teste");
+        listCompras.forEach(item -> System.out.println(item));
+        System.out.println("------------------");
+        listCompras.add("Óleo");
+        listCompras.add("Detergente");
+        listCompras.add("Lâmpada");
+        listCompras.add("Linguiça");
+        Collections.sort(listCompras, Collections.reverseOrder());
+        listCompras.forEach(item -> System.out.println(item));
+
     }
 }

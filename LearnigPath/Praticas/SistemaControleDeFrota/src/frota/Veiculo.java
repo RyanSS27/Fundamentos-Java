@@ -1,8 +1,11 @@
 package frota;
 
 import oficina.Oficina;
+import oficina.Relatorio;
 
-public abstract class Veiculo implements InterfaceVeiculo {
+import java.lang.Comparable;
+
+public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio> {
     private static int qtdeVeiculosMembrosDaFrota;
 
     // Atributos
@@ -75,6 +78,20 @@ public abstract class Veiculo implements InterfaceVeiculo {
         if(emManutencao) {
             this.limpo = true;
         }
+    }
+
+    @Override
+    public int compareTo(Relatorio veiculoComparado) {
+        return this.getModelo().compareTo(veiculoComparado.getDescricao());
+    }
+
+    @Override
+    public String toString() {
+        return " %s - %s (categoria: %s)".formatted(
+                this.getMarca(),
+                this.getModelo(),
+                this.getCategoria()
+                );
     }
 
     //Getters e Setters
