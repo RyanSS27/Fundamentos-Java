@@ -1,12 +1,14 @@
 package frota;
 
 import oficina.Oficina;
-import oficina.Relatorio;
-
 import java.lang.Comparable;
+import java.util.Locale;
 
-public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio> {
+public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     private static int qtdeVeiculosMembrosDaFrota;
+    private static int qtdeVeiculosCategoriaA;
+    private static int qtdeVeiculosCategoriaB;
+    private static int qtdeVeiculosCategoriaC;
 
     // Atributos
     private String placa;
@@ -26,6 +28,7 @@ public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio>
 
     // Atributos de estado
     private float tanque; // litros vigentes
+    private boolean emLocacao;
     protected boolean emManutencao;
     private boolean limpo;
     private boolean quebrado;
@@ -35,6 +38,16 @@ public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio>
 
     public Veiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
         qtdeVeiculosMembrosDaFrota++;
+        categoria = categoria.toUpperCase();
+        switch (categoria) {
+            case "A" -> qtdeVeiculosCategoriaA++;
+            case "B" -> qtdeVeiculosCategoriaB++;
+            case "C" -> qtdeVeiculosCategoriaC++;
+            default -> {
+                System.out.println("Erro. Categoria inválida.");
+                return;
+            }
+        }
         this.placa = placa.toUpperCase();
         this.modelo = modelo;
         this.marca = marca;
@@ -42,6 +55,7 @@ public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio>
         this.qtdeMaxOcupantes = qtdeMaxOcupantes;
         this.capacidadeMaximaTanque = capacidadeMaximaTanque;
         this.quilometragem = quilometragem;
+        this.emLocacao = false;
     }
 
     protected void rodar(float quilometros) {
@@ -81,15 +95,16 @@ public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio>
     }
 
     @Override
-    public int compareTo(Relatorio veiculoComparado) {
-        return this.getModelo().compareTo(veiculoComparado.getDescricao());
+    public int compareTo(Veiculo veiculoComparado) {
+        return this.getModelo().compareTo(veiculoComparado.getModelo());
     }
 
     @Override
     public String toString() {
-        return " %s - %s (categoria: %s)".formatted(
+        return " %s, %s - Placa [%s] (categoria: %s)".formatted(
                 this.getMarca(),
                 this.getModelo(),
+                this.getPlaca(),
                 this.getCategoria()
                 );
     }
@@ -185,7 +200,7 @@ public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio>
     }
 
     public void setEmCondicaoDeUso() {
-        this.emCondicaoDeUso = (getTanquePorcentagem() >= (Oficina.CAPACIDADE_MINIMA_GASOLINA_LOCACAO * 10)) && !this.emManutencao && this.limpo && !this.quebrado;
+        this.emCondicaoDeUso = (getTanquePorcentagem() >= (Oficina.CAPACIDADE_MINIMA_GASOLINA_LOCACAO * 10)) && !this.emManutencao && this.limpo && !this.quebrado && !emLocacao;
     }
 
     public float getQuilometragem() {
@@ -233,5 +248,13 @@ public abstract class Veiculo implements InterfaceVeiculo, Comparable<Relatorio>
 
     public String getPlaca() {
         return this.placa.toUpperCase();
+    }
+
+    public boolean isEmLocacao() {
+        return emLocacao;
+    }
+
+    public void setEmLocacao(boolean emLocacao) {
+        this.emLocacao = emLocacao;
     }
 }
