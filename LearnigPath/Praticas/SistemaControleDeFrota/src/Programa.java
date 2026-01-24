@@ -30,21 +30,24 @@ public class Programa {
         repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2);
         repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2);
         repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2);
-
-
-        System.out.printf("""
+        int opt = 0;
+        while (opt != 5) {
+            System.out.print("""
+                =====================================
                           ALUGUEL DE CARROS
                 =====================================
                 [1] Listar veículos
+                [2] Alugar veículo
+                [3] Registrar retorno
+                [5] Encerrar programa
                 =====================================
-                Digite: 
-                """);
-        int opt = sc.nextInt();
-        switch (opt) {
-            case 1 -> {
-                int opt2 = 0;
-                while (opt2 > 5 || opt2 <= 0) {
-                    System.out.printf("""
+                Digite:""");
+            opt = sc.nextInt();
+            switch (opt) {
+                case 1 -> {
+                    int opt2 = 0;
+                    while (opt2 > 5 || opt2 <= 0) {
+                        System.out.print("""
                                   ALUGUEL DE CARROS
                         =====================================
                         [1] Listar todos
@@ -53,38 +56,64 @@ public class Programa {
                         [4] Listar categoria C
                         [5] Voltar
                         =====================================
-                        Digite: 
-                    """);
-                    opt2 = sc.nextInt();
-                    switch (opt2) {
-                        case 1 -> {
-                            List<Veiculo> duplicataDados = new ArrayList<>(repositorio.listarVeiculos());
-                            duplicataDados.forEach(v -> exibirVeiculo(v));
-                        }
+                        Digite:""");
+                        opt2 = sc.nextInt();
+                        switch (opt2) {
+                            case 1 -> {
+                                List<Veiculo> duplicataDados = new ArrayList<>(repositorio.listarVeiculos());
+                                duplicataDados.forEach(v -> exibirVeiculo(v));
+                                System.out.println("Pressione qualquer tecla para voltar.");
+                                // Consome a quebra de linha do buffer
+                                sc.nextLine();
+                                // Consome o que o usuário digitar
+                                sc.nextLine();
+                                opt2 = 5;
+                            }
 
-                        case 2 -> {
-                            List<Veiculo> categoriaA = new ArrayList<>(repositorio.listarVeiculos("A"));
-                            listarCategoria(categoriaA, "A");
-                        }
+                            case 2 -> {
+                                List<Veiculo> categoriaA = new ArrayList<>(repositorio.listarVeiculos("A"));
+                                listarCategoria(categoriaA, "A");
+                                System.out.println("Pressione qualquer tecla para voltar.");
+                                // Consome a quebra de linha do buffer
+                                sc.nextLine();
+                                // Consome o que o usuário digitar
+                                sc.nextLine();
+                                opt2 = 5;
+                            }
 
-                        case 3 -> {
-                            List<Veiculo> categoriaB = new ArrayList<>(repositorio.listarVeiculos("A"));
-                            listarCategoria(categoriaB, "B");
-                        }
+                            case 3 -> {
+                                List<Veiculo> categoriaB = new ArrayList<>(repositorio.listarVeiculos("A"));
+                                listarCategoria(categoriaB, "B");
+                                System.out.println("Pressione qualquer tecla para voltar.");
+                                // Consome a quebra de linha do buffer
+                                sc.nextLine();
+                                // Consome o que o usuário digitar
+                                sc.nextLine();
+                                opt2 = 5;
+                            }
 
-                        case 4 -> {
-                            List<Veiculo> categoriaC = new ArrayList<>(repositorio.listarVeiculos("A"));
-                            listarCategoria(categoriaC, "C");
-                        }
+                            case 4 -> {
+                                List<Veiculo> categoriaC = new ArrayList<>(repositorio.listarVeiculos("A"));
+                                listarCategoria(categoriaC, "C");
+                                System.out.println("Pressione qualquer tecla para voltar.");
+                                // Consome a quebra de linha do buffer
+                                sc.nextLine();
+                                // Consome o que o usuário digitar
+                                sc.nextLine();
+                                opt2 = 5;
+                            }
 
-                        case 5 -> System.out.println("Voltando..");
-                        default -> System.out.println("Opção inválida");
+                            case 5 -> System.out.println("Voltando..");
+                            default -> System.out.println("Opção inválida");
+                        }
                     }
-
                 }
+                case 5 -> System.out.println("Encerrando o programa..");
+                default -> System.out.println("Opção inválida");
             }
-            default -> System.out.println("Opção inválida");
         }
+
+
         /*
             Conter 2 tipos de acesso:
             1° Acesso
