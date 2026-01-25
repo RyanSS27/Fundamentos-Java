@@ -1,5 +1,6 @@
 import frota.Veiculo;
 import oficina.Oficina;
+import utilitarios.Debitos;
 
 import java.util.*;
 
@@ -36,6 +37,8 @@ public class Programa {
         for (Veiculo vrumVrum : frotaParaConcerto) {
             System.out.println(oficina.preparacao(vrumVrum));
         }
+
+        List<Debitos> pedidos = new ArrayList<>();
 
         System.out.println(Oficina.checkup(frotaParaConcerto.get(0)));
         int opt = 0;
@@ -133,47 +136,45 @@ public class Programa {
                         System.out.println("=====================================");
                         switch (opt2) {
                             case 1 -> {
-                                int opt3 = 0;
-                                while (opt3 != 5) {
-                                    List<Veiculo> motos = new ArrayList<>(repositorio.listarVeiculos("A", true));
-                                    // Se haver veículos, ele segue o curso. Se não houver, retorna
-                                    if (motos.size() > 0) {
-                                        for (int i = 1; i-1<motos.size(); i++) {
-                                            System.out.println("""
-                                                    ------- ID %d -------
-                                                    Veículo: %s
-                                                    Em locação: %b
-                                                    Em condição de locação: %b
-                                                    """.formatted(i, motos.get(i-1), motos.get(i-1).isEmLocacao(), motos.get(i-1).isEmCondicaoDeUso()));
-                                        }
-                                        System.out.printf("[%d] Cancelar", motos.size() + 1);
-                                        System.out.println("Qual veículo deseja?");
-                                        opt3 = sc.nextInt() - 1;
-                                        if (opt3 == motos.size()) {
-                                            System.out.println("Voltando..");
-                                            opt3 = 5;
-                                        } else if (opt3 > motos.size() || opt3 < 0) {
-                                            System.out.println("--- Digite um valor válido. Tente novamente. ---");
-                                        } else {
-                                            //Inserir a lógica de cadastro/verificação do cliente
-                                            motos.get(opt3).serAlugado(null);
-                                        }
-                                    } else {
-                                        System.out.println("Não há veículos desta categoria disponíveis.");
-                                        opt3 = 5;
-                                    }
-                                }
+                                alugarVeiculo("A", repositorio, sc);
                             }
 
                             case 2 -> {
-
+                                alugarVeiculo("B", repositorio, sc);
                             }
+
+                            case 3 -> {
+                                alugarVeiculo("C", repositorio, sc);
+                            }
+
+                            case 4 -> System.out.println("Cancelando..");
+                            default -> System.out.println("Opção inválida, tente novamente.");
                         }
                     }
                 }
                 case 3 -> {
-                    List<Veiculo> motosEmLocacao = new ArrayList<>(repositorio.listarVeiculos("A", false));
-                    listarVeiculos(motosEmLocacao);
+                    int opt2 = 0;
+                    while (opt2 != 4) {
+                        System.out.print("""
+                                =====================================
+                                          ALUGUEL DE CARROS
+                                =====================================
+                                [1] Procurar pedido por CPF
+                                [2] Procurar pedido por placa
+                                [3] Listar pedidos
+                                [4] Voltar
+                                =====================================
+                                Digite:""");
+                        opt2 = sc.nextInt();
+                        switch (opt2) {
+                            case -> 1 {
+                                System.out.print("Digite o CPF: ");
+
+                            }
+
+                            default -> System.out.println("Opção inválida. Tente novamente ");
+                        }
+                    }
                 }
                 case 5 -> System.out.println("Encerrando o programa..");
                 default -> System.out.println("Opção inválida");
@@ -214,5 +215,38 @@ public class Programa {
 
     public static void listarVeiculos(List<Veiculo> veiculos) {
         veiculos.forEach(v -> exibirVeiculo(v));
+    }
+
+    public static void alugarVeiculo(String categoria, Repositorio repositorio, Scanner sc, sc) {
+        int opt3 = 0;
+        while (opt3 != 5) {
+            List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorio.listarVeiculos(categoria, true));
+            // Se haver veículos, ele segue o curso. Se não houver, retorna
+            if (veiculosDisponiveis.size() > 0) {
+                for (int i = 1; i-1<veiculosDisponiveis.size(); i++) {
+                    System.out.println("""
+                                                    ------- ID %d -------
+                                                    Veículo: %s
+                                                    Em locação: %b
+                                                    Em condição de locação: %b
+                                                    """.formatted(i, veiculosDisponiveis.get(i-1), veiculosDisponiveis.get(i-1).isEmLocacao(), veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()));
+                }
+                System.out.printf("[%d] Cancelar", veiculosDisponiveis.size() + 1);
+                System.out.println("Qual veículo deseja?");
+                opt3 = sc.nextInt() - 1;
+                if (opt3 == veiculosDisponiveis.size()) {
+                    System.out.println("Voltando..");
+                    opt3 = 5;
+                } else if (opt3 > veiculosDisponiveis.size() || opt3 < 0) {
+                    System.out.println("--- Digite um valor válido. Tente novamente. ---");
+                } else {
+                    //Inserir a lógica de cadastro/verificação do cliente
+                    veiculosDisponiveis.get(opt3).serAlugado(null);
+                }
+            } else {
+                System.out.println("Não há veículos desta categoria disponíveis.");
+                opt3 = 5;
+            }
+        }
     }
 }
