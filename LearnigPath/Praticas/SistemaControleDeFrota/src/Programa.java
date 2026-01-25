@@ -1,7 +1,7 @@
 import frota.Veiculo;
+import oficina.Oficina;
 
 import java.util.*;
-import java.lang.Comparable;
 
 
 public class Programa {
@@ -30,18 +30,26 @@ public class Programa {
         repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2);
         repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2);
         repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2);
+
+        List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorio.listarVeiculos());
+        Oficina oficina = new Oficina();
+        for (Veiculo vrumVrum : frotaParaConcerto) {
+            System.out.println(oficina.preparacao(vrumVrum));
+        }
+
+        System.out.println(Oficina.checkup(frotaParaConcerto.get(0)));
         int opt = 0;
         while (opt != 5) {
             System.out.print("""
-                =====================================
-                          ALUGUEL DE CARROS
-                =====================================
-                [1] Listar veículos
-                [2] Alugar veículo
-                [3] Registrar retorno
-                [5] Encerrar programa
-                =====================================
-                Digite:""");
+                    =====================================
+                              ALUGUEL DE CARROS
+                    =====================================
+                    [1] Listar veículos
+                    [2] Alugar veículo
+                    [3] Registrar retorno
+                    [5] Encerrar programa
+                    =====================================
+                    Digite:""");
             opt = sc.nextInt();
             switch (opt) {
                 case 1 -> {
@@ -72,7 +80,7 @@ public class Programa {
 
                             case 2 -> {
                                 List<Veiculo> categoriaA = new ArrayList<>(repositorio.listarVeiculos("A"));
-                                listarCategoria(categoriaA, "A");
+                                listarVeiculos(categoriaA);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
                                 sc.nextLine();
@@ -82,8 +90,8 @@ public class Programa {
                             }
 
                             case 3 -> {
-                                List<Veiculo> categoriaB = new ArrayList<>(repositorio.listarVeiculos("A"));
-                                listarCategoria(categoriaB, "B");
+                                List<Veiculo> categoriaB = new ArrayList<>(repositorio.listarVeiculos("B"));
+                                listarVeiculos(categoriaB);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
                                 sc.nextLine();
@@ -93,8 +101,8 @@ public class Programa {
                             }
 
                             case 4 -> {
-                                List<Veiculo> categoriaC = new ArrayList<>(repositorio.listarVeiculos("A"));
-                                listarCategoria(categoriaC, "C");
+                                List<Veiculo> categoriaC = new ArrayList<>(repositorio.listarVeiculos("C"));
+                                listarVeiculos(categoriaC);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
                                 sc.nextLine();
@@ -107,6 +115,65 @@ public class Programa {
                             default -> System.out.println("Opção inválida");
                         }
                     }
+                }
+                case 2 -> {
+                    int opt2 = 0;
+                    while (opt2 != 4) {
+                        System.out.println("""
+                            =====================================
+                                      ALUGUEL DE CARROS
+                            =====================================
+                            [1] Alugar Moto
+                            [2] Alugar Veículo de passeio
+                            [3] Alugar Caminhão ou Van
+                            [4] Cancelar
+                            =====================================
+                            Digite:""");
+                        opt2 = sc.nextInt();
+                        System.out.println("=====================================");
+                        switch (opt2) {
+                            case 1 -> {
+                                int opt3 = 0;
+                                while (opt3 != 5) {
+                                    List<Veiculo> motos = new ArrayList<>(repositorio.listarVeiculos("A", true));
+                                    // Se haver veículos, ele segue o curso. Se não houver, retorna
+                                    if (motos.size() > 0) {
+                                        for (int i = 1; i-1<motos.size(); i++) {
+                                            System.out.println("""
+                                                    ------- ID %d -------
+                                                    Veículo: %s
+                                                    Em locação: %b
+                                                    Em condição de locação: %b
+                                                    """.formatted(i, motos.get(i-1), motos.get(i-1).isEmLocacao(), motos.get(i-1).isEmCondicaoDeUso()));
+                                        }
+                                        System.out.printf("[%d] Cancelar", motos.size() + 1);
+                                        System.out.println("Qual veículo deseja?");
+                                        opt3 = sc.nextInt() - 1;
+                                        if (opt3 == motos.size()) {
+                                            System.out.println("Voltando..");
+                                            opt3 = 5;
+                                        } else if (opt3 > motos.size() || opt3 < 0) {
+                                            System.out.println("--- Digite um valor válido. Tente novamente. ---");
+                                        } else {
+                                            //Inserir a lógica de cadastro/verificação do cliente
+                                            motos.get(opt3).serAlugado(null);
+                                        }
+                                    } else {
+                                        System.out.println("Não há veículos desta categoria disponíveis.");
+                                        opt3 = 5;
+                                    }
+                                }
+                            }
+
+                            case 2 -> {
+
+                            }
+                        }
+                    }
+                }
+                case 3 -> {
+                    List<Veiculo> motosEmLocacao = new ArrayList<>(repositorio.listarVeiculos("A", false));
+                    listarVeiculos(motosEmLocacao);
                 }
                 case 5 -> System.out.println("Encerrando o programa..");
                 default -> System.out.println("Opção inválida");
@@ -145,7 +212,7 @@ public class Programa {
                         """.formatted(v, v.isEmLocacao(), v.isEmCondicaoDeUso()));
     }
 
-    public static void listarCategoria(List<Veiculo> veiculos, String categoria) {
+    public static void listarVeiculos(List<Veiculo> veiculos) {
         veiculos.forEach(v -> exibirVeiculo(v));
     }
 }

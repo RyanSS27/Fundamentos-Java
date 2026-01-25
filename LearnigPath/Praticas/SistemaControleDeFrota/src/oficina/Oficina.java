@@ -6,10 +6,10 @@ import frota.Veiculo;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class Oficina {
+public class Oficina {
     // Deve-se ter 1/3 do tanque para o carro poder ser alugado
     public static final float CAPACIDADE_MINIMA_GASOLINA_LOCACAO = 3.0f;
-    private static float reservaGasolina;
+    private static float reservaGasolina = 10000;
 
     public static void setReservaGasolina(float litros) {
         reservaGasolina += litros;
@@ -151,7 +151,7 @@ public abstract class Oficina {
     }
 
     // Realiza o conserto do veículo
-    public Relatorio conserto(Veiculo automovel) {
+    public static Relatorio conserto(Veiculo automovel) {
         if (automovel.getNivelDano() == 10) {
             String descricao = "PT no carro.";
             String possivelCausa = "Podemos dizer que ele APARENTEMENTE perdeu a briga com o poste.";
@@ -176,7 +176,7 @@ public abstract class Oficina {
     }
 
     // Realiza a preparação completa do veículo para locação
-    public String preparacao(Veiculo automovel) {
+    public static String preparacao(Veiculo automovel) {
         if (automovel.getNivelDano() == 10) {
             return """
                     ===========================================================
@@ -186,13 +186,14 @@ public abstract class Oficina {
                     Razão: Perda total.
                     """;
         }
+        automovel.setEmManutencao(!automovel.isEmManutencao());
         String relatorioFinal = abastecer(automovel, "min");
         Relatorio relatorioConcerto = conserto(automovel);
         relatorioFinal += "\n" + relatorioConcerto.relatorioExtenso();
         automovel.lavar();
         automovel.setEmCondicaoDeUso();
         // Tira o carro ou não da manutenção
-        automovel.setEmManutencao(!automovel.isEmCondicaoDeUso());
+        automovel.setEmManutencao(!automovel.isEmManutencao());
         String notaDeCondicao = automovel.isEmCondicaoDeUso()?
                 "Inápto no momento." : "Veículo nos trinques chefia, pronto para locação.";
         return """
@@ -208,7 +209,7 @@ public abstract class Oficina {
     }
 
     // Abastece conforme a quantidade desejada de litros
-    public String abastecer(Veiculo automovel, float litrosDesejados) {
+    public static String abastecer(Veiculo automovel, float litrosDesejados) {
         if (reservaGasolina <= 0) {
             return "Erro: Reserva da oficina vazia.";
         }
@@ -252,7 +253,7 @@ public abstract class Oficina {
     }
 
     // Enche o tanque ou preenche o mínimo de combustível para locação
-    public String abastecer(Veiculo automovel, String minOuMax) {
+    public static String abastecer(Veiculo automovel, String minOuMax) {
         if ("min".equalsIgnoreCase(minOuMax)) {
             float nivelMinimo = automovel.getCapacidadeMaximaTanque() / 3.0f;
 
@@ -273,7 +274,7 @@ public abstract class Oficina {
     }
 
     // Relatorio de abastecimento
-    private String gerarRelatorio(float abastecido, String notaControle, float porcentagem) {
+    private static String gerarRelatorio(float abastecido, String notaControle, float porcentagem) {
         return """
                 ===========================================================
                                   RELATÓRIO ABASTECIMENTO

@@ -1,6 +1,8 @@
 package frota;
 
 import oficina.Oficina;
+import utilitarios.Cliente;
+
 import java.lang.Comparable;
 import java.util.Locale;
 
@@ -35,6 +37,7 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     private boolean emCondicaoDeUso;
     private int nivelDano;
     private float quilometragem;
+    private Cliente locatario;
 
     public Veiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
         qtdeVeiculosMembrosDaFrota++;
@@ -56,6 +59,7 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
         this.capacidadeMaximaTanque = capacidadeMaximaTanque;
         this.quilometragem = quilometragem;
         this.emLocacao = false;
+        this.locatario = null;
     }
 
     protected void rodar(float quilometros) {
@@ -91,6 +95,18 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     public void lavar() {
         if(emManutencao) {
             this.limpo = true;
+        }
+    }
+
+    @Override
+    public void serAlugado(Cliente locatario) {
+        if (isEmCondicaoDeUso()) {
+            setEmLocacao(true);
+            setLocatario(locatario);
+            this.setLimpo(false);
+            setEmCondicaoDeUso();
+        } else {
+            System.out.println("O veículo não pode ser alugado.");
         }
     }
 
@@ -256,5 +272,13 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
 
     public void setEmLocacao(boolean emLocacao) {
         this.emLocacao = emLocacao;
+    }
+
+    public Cliente getLocatario() {
+        return locatario;
+    }
+
+    public void setLocatario(Cliente locatario) {
+        this.locatario = locatario;
     }
 }

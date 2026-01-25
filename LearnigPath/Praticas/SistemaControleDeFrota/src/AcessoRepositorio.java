@@ -8,5 +8,5 @@ public interface AcessoRepositorio {
 
     public abstract List<Veiculo> listarVeiculos();
     public abstract List<Veiculo> listarVeiculos(String categoria);
-    public abstract List<Veiculo> listarVeiculos(String categoria, boolean emUso);
+    public abstract List<Veiculo> listarVeiculos(String categoria, boolean emCondicaoUso);
 }
