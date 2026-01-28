@@ -10,8 +10,8 @@ public class Repositorio implements AcessoRepositorio {
     private List<Veiculo> frota = new ArrayList<>();
 
     @Override
-    public void salvarVeiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
-        frota.add(new Veiculo(marca, modelo, placa, quilometragem, capacidadeMaximaTanque, categoria, qtdeMaxOcupantes));
+    public void salvarVeiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes, float valor) {
+        frota.add(new Veiculo(marca, modelo, placa, quilometragem, capacidadeMaximaTanque, categoria, qtdeMaxOcupantes, valor));
         frota.sort(Comparator.comparing(Veiculo::getCategoria));
     }
 

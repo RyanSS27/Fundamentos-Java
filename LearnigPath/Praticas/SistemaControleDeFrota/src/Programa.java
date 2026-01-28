@@ -1,6 +1,7 @@
 import frota.Veiculo;
 import oficina.Oficina;
 import utilitarios.Debitos;
+import utilitarios.Pedido;
 
 import java.util.*;
 
@@ -10,27 +11,28 @@ public class Programa {
         Scanner sc = new Scanner(System.in);
         sc.useLocale(Locale.US);
         Repositorio repositorio = new Repositorio();
+
         // --- 6 Motos (Categoria A) ---
-        repositorio.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2);
-        repositorio.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2);
-        repositorio.salvarVeiculo("BMW", "G310 GS", "MOT-1003", 120.0f, 11.0f, "A", 2);
-        repositorio.salvarVeiculo("Kawasaki", "Ninja 400", "MOT-1004", 3400.2f, 14.0f, "A", 2);
-        repositorio.salvarVeiculo("Suzuki", "V-Strom 650", "MOT-1005", 8900.0f, 20.0f, "A", 2);
-        repositorio.salvarVeiculo("Ducati", "Scrambler", "MOT-1006", 450.7f, 13.5f, "A", 2);
+        repositorio.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2, 35000.0f);
+        repositorio.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2, 22000.0f);
+        repositorio.salvarVeiculo("BMW", "G310 GS", "MOT-1003", 120.0f, 11.0f, "A", 2, 38000.0f);
+        repositorio.salvarVeiculo("Kawasaki", "Ninja 400", "MOT-1004", 3400.2f, 14.0f, "A", 2, 34000.0f);
+        repositorio.salvarVeiculo("Suzuki", "V-Strom 650", "MOT-1005", 8900.0f, 20.0f, "A", 2, 45000.0f);
+        repositorio.salvarVeiculo("Ducati", "Scrambler", "MOT-1006", 450.7f, 13.5f, "A", 2, 55000.0f);
 
         // --- 6 Carros (Categoria B) ---
-        repositorio.salvarVeiculo("Toyota", "Corolla", "CAR-2001", 15000.0f, 50.0f, "B", 4);
-        repositorio.salvarVeiculo("Volkswagen", "Golf", "CAR-2002", 22500.8f, 51.0f, "B", 4);
-        repositorio.salvarVeiculo("Honda", "Civic", "CAR-2003", 5400.0f, 56.0f, "B", 4);
-        repositorio.salvarVeiculo("Hyundai", "HB20", "CAR-2004", 32000.5f, 50.0f, "B", 4);
-        repositorio.salvarVeiculo("Chevrolet", "Onix", "CAR-2005", 1200.0f, 44.0f, "B", 4);
-        repositorio.salvarVeiculo("Ford", "Focus", "CAR-2006", 45600.3f, 55.0f, "B", 5);
+        repositorio.salvarVeiculo("Toyota", "Corolla", "CAR-2001", 15000.0f, 50.0f, "B", 4, 120000.0f);
+        repositorio.salvarVeiculo("Volkswagen", "Golf", "CAR-2002", 22500.8f, 51.0f, "B", 4, 95000.0f);
+        repositorio.salvarVeiculo("Honda", "Civic", "CAR-2003", 5400.0f, 56.0f, "B", 4, 110000.0f);
+        repositorio.salvarVeiculo("Hyundai", "HB20", "CAR-2004", 32000.5f, 50.0f, "B", 4, 70000.0f);
+        repositorio.salvarVeiculo("Chevrolet", "Onix", "CAR-2005", 1200.0f, 44.0f, "B", 4, 65000.0f);
+        repositorio.salvarVeiculo("Ford", "Focus", "CAR-2006", 45600.3f, 55.0f, "B", 5, 80000.0f);
 
         // --- 4 Vans (Categoria C) ---
-        repositorio.salvarVeiculo("Mercedes", "Sprinter", "VAN-3001", 67000.0f, 75.0f, "C", 2);
-        repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2);
-        repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2);
-        repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2);
+        repositorio.salvarVeiculo("Mercedes", "Sprinter", "VAN-3001", 67000.0f, 75.0f, "C", 2, 180000.0f);
+        repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2, 160000.0f);
+        repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2, 155000.0f);
+        repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2, 170000.0f);
 
         List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorio.listarVeiculos());
         Oficina oficina = new Oficina();
@@ -167,10 +169,59 @@ public class Programa {
                                 Digite:""");
                         opt2 = sc.nextInt();
                         switch (opt2) {
-                            case -> 1 {
+                            case 1 -> {
                                 System.out.print("Digite o CPF: ");
+                                int CPF = sc.nextInt();
+                                Debitos pedido = pedidos.stream().filter(x -> CPF == x.getCliente().getCPF()).findFirst().orElse(null);
+                                if (pedido == null) {
+                                    System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
+                                    sc.nextLine();
+                                    opt2 = 4;
+                                } else {
+                                    pedido.getVeiculoAlugado().retornar();
 
+                                    pagar(pedido, sc);
+                                }
                             }
+
+                            case 2 -> {
+                                System.out.print("Informe a placa do veículo: ");
+                                String placa = sc.nextLine();
+                                Debitos pedido = pedidos.stream().filter(x -> placa.equals(x.getVeiculoAlugado().getPlaca())).findFirst().orElse(null);
+                                if (pedido == null) {
+                                    System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
+                                    sc.nextLine();
+                                } else {
+                                    pagar(pedido, sc);
+                                }
+                                opt2 = 4;
+                            }
+                            // Falta alterar o veículo para que conste que ele não esteja mais em locação
+                            case 3 -> {
+                                if (pedidos.size() == 0) {
+                                    System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
+                                    sc.nextLine();
+                                } else {
+                                    // Lista os pedidos
+                                    for (int i = 1; i <= pedidos.size(); i++) {
+                                        System.out.println(pedidos.get(i-1));
+                                    }
+                                    System.out.println("""
+                                            =====================================
+                                            Digite qual pedido deseja:
+                                            """);
+                                    int opcao = sc.nextInt()-1;
+                                    if (opcao < pedidos.size() && opcao >= 0) {
+                                        pagar(pedidos.get(opcao), sc);
+                                    } else {
+                                        System.out.println("Opção inválida.\nDê \"Enter\" para seguir.");
+                                        sc.nextLine();
+                                    }
+                                }
+                                opt2 = 4;
+                            }
+
+                            case 4 -> System.out.println("Voltando..");
 
                             default -> System.out.println("Opção inválida. Tente novamente ");
                         }
@@ -217,7 +268,7 @@ public class Programa {
         veiculos.forEach(v -> exibirVeiculo(v));
     }
 
-    public static void alugarVeiculo(String categoria, Repositorio repositorio, Scanner sc, sc) {
+    public static void alugarVeiculo(String categoria, Repositorio repositorio, Scanner sc) {
         int opt3 = 0;
         while (opt3 != 5) {
             List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorio.listarVeiculos(categoria, true));
@@ -247,6 +298,16 @@ public class Programa {
                 System.out.println("Não há veículos desta categoria disponíveis.");
                 opt3 = 5;
             }
+        }
+    }
+
+    public static void pagar(Debitos debito, Scanner sc) {
+        System.out.println(debito);
+        System.out.print("Digite o valor do pagamento:\nR$");
+        float pagamento = sc.nextFloat();
+        System.out.println(debito.pagar(pagamento));
+        if (!debito.isPaga()) {
+            System.out.println("Cliente ficará em dívida e não poderá alugar demais veículos.");
         }
     }
 }

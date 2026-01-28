@@ -7,8 +7,8 @@ public interface InterfaceVeiculo {
     public abstract void serConsertado();
     public abstract void lavar();
     public abstract void serAlugado(Cliente locatario);
+    public abstract void retornar();
     /*
     Implementação futura
-        public abstract void retornar();
    */
 }

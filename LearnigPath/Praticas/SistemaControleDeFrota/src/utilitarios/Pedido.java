@@ -1,6 +1,12 @@
 package utilitarios;
 
+import frota.Veiculo;
+
 public class Pedido extends Debitos {
+    public Pedido(Cliente cliente, Veiculo veiculoAlugado, float valor, String descricao) {
+        super(cliente, veiculoAlugado, valor, descricao);
+    }
+
     @Override
     public String toString() {
         return """

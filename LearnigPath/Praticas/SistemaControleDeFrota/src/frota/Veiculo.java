@@ -39,7 +39,7 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     private float quilometragem;
     private Cliente locatario;
 
-    public Veiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes) {
+    public Veiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes, float valor) {
         qtdeVeiculosMembrosDaFrota++;
         categoria = categoria.toUpperCase();
         switch (categoria) {
@@ -60,6 +60,7 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
         this.quilometragem = quilometragem;
         this.emLocacao = false;
         this.locatario = null;
+        this.valor = valor;
     }
 
     protected void rodar(float quilometros) {
@@ -94,7 +95,7 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     @Override
     public void lavar() {
         if(emManutencao) {
-            this.limpo = true;
+            setLimpo(true);
         }
     }
 
@@ -108,6 +109,13 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
         } else {
             System.out.println("O veículo não pode ser alugado.");
         }
+    }
+
+    @Override
+    public void retornar() {
+        this.setEmLocacao(false);
+        this.setLimpo(false);
+        this.setEmCondicaoDeUso();
     }
 
     @Override

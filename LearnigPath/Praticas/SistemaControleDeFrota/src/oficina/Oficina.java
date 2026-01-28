@@ -3,6 +3,9 @@ package oficina;
 // * Deve consertá-lo para as condições mínimas de locação nome: preparação
 
 import frota.Veiculo;
+import utilitarios.Debitos;
+import utilitarios.Multa;
+import utilitarios.Pedido;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -102,7 +105,7 @@ public class Oficina {
     }
 
     // Analisa o veículo após o uso do cliente
-    public Relatorio revisaoPosUso(Veiculo automovel) {
+    public Relatorio revisaoPosUso(Pedido pedido) {
         /*
             Simula a atuação dos mecânicos, por não haver atores que
             entrem com as condições do veículo e retorna se há algum
@@ -118,8 +121,8 @@ public class Oficina {
             10 (1/10) = pt no carro
         */
         if (chanceQuebra == 1) {
-            int nivelDano = ThreadLocalRandom.current().nextInt();
-            automovel.setNivelDano(nivelDano);
+            int nivelDano = ThreadLocalRandom.current().nextInt(1, 11);
+            pedido.getVeiculoAlugado().setNivelDano(nivelDano);
             String possivelCausa;
 
             // Simula entrada de descrições dos mecânicos
@@ -141,12 +144,15 @@ public class Oficina {
                     yield "Valor inválido";
                 }
             };
-            return new RelatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
+            RelatorioCondicao relatorioCondicao = new RelatorioCondicao(pedido.getVeiculoAlugado().getPlaca(), possivelCausa, descricao, pedido.getVeiculoAlugado().getNivelDano());
+            if (nivelDano > 3)
+                Debitos multa = new Multa(relatorioCondicao, pedido);
+            return relatorioCondicao;
         } else {
-            automovel.setNivelDano(0);
+            pedido.getVeiculoAlugado().setNivelDano(0);
             String descricao = "PT no carro.";
             String possivelCausa = "Podemos dizer que ele APARENTEMENTE perdeu a briga com o poste.";
-            return new RelatorioCondicao(automovel.getPlaca(), possivelCausa, descricao, automovel.getNivelDano());
+            return new RelatorioCondicao(pedido.getVeiculoAlugado().getPlaca(), possivelCausa, descricao, pedido.getVeiculoAlugado().getNivelDano());
         }
     }
 
