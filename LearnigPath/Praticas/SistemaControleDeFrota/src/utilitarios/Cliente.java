@@ -12,6 +12,7 @@ public class Cliente {
     private List<Debitos> historicoPedidos = new ArrayList<>();
     private List<Debitos> multas = new ArrayList<>(); // Multas por danos ao patrimônio
     private boolean aptoLocacao;
+    private double totalDebitos;
 
     public String getNome() {
         return nome;
@@ -36,7 +37,7 @@ public class Cliente {
     public void setPedido(Debitos pedido) {
         if (aptoLocacao) {
             this.historicoPedidos.add(pedido);
-            setAptoLocacao();
+            atualizarDadosFinanceiros();
         } else {
             System.out.println("Inápito para locação");
         }
@@ -48,28 +49,75 @@ public class Cliente {
 
     public void setMultas(Debitos multas) {
         this.multas.add(multas);
-        setAptoLocacao();
+        atualizarDadosFinanceiros();
     }
 
     public boolean isAptoLocacao() {
         return aptoLocacao;
     }
 
-    public void setAptoLocacao() {
-        int contagem = 0;
+    public void atualizarDadosFinanceiros() {
+        aptoLocacao = true;
+        this.totalDebitos = 0.0;
         for (Debitos p : historicoPedidos)
             if (!p.paga) {
                 aptoLocacao = false;
-                contagem++;
+                this.totalDebitos += p.getValor();
             }
 
-        for (Debitos m : multas) {
+        for (Debitos m : multas)
             if (!m.paga) {
                 aptoLocacao = false;
-                contagem++;
+                this.totalDebitos += m.getValor();
+            }
+    }
+
+    public String realizarPagamento(double valorPagamento) {
+        if (valorPagamento <= 0) return "Valor inválido.";
+
+        double saldoParaGastar = valorPagamento;
+
+        // 1. Tenta pagar os pedidos primeiro
+        saldoParaGastar = tentarPagarLista(historicoPedidos, saldoParaGastar);
+
+        // 2. Com o que sobrou, tenta pagar as multas
+        saldoParaGastar = tentarPagarLista(multas, saldoParaGastar);
+
+        // Atualiza status final
+        atualizarDadosFinanceiros();
+
+        double troco = saldoParaGastar;
+
+        if (this.totalDebitos == 0) {
+            if (troco > 0) {
+                return "Dívidas quitadas! Seu troco: R$ " + troco;
+            }
+            return "Dívidas quitadas com sucesso.";
+        } else {
+            return "Pagamento parcial realizado. Ainda deve: R$ " + this.totalDebitos;
+        }
+    }
+
+    // Método auxiliar simples para não repetir código
+    private double tentarPagarLista(List<Debitos> listaDebitos, double saldo) {
+        for (Debitos debito : listaDebitos) {
+            // Se acabou o dinheiro, para o loop
+            if (saldo <= 0) break;
+
+            if (!debito.isPaga()) {
+                double valorDivida = debito.getValor();
+
+                if (saldo >= valorDivida) {
+                    // Paga tudo
+                    debito.pagar(valorDivida);
+                    saldo -= valorDivida;
+                } else {
+                    // Paga o que dá (parcial)
+                    debito.pagar(saldo);
+                    saldo = 0;
+                }
             }
         }
-
-        if (contagem == 0) aptoLocacao = true;
+        return saldo; // Retorna quanto sobrou
     }
 }
