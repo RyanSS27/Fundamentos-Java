@@ -1,6 +1,8 @@
 import frota.Veiculo;
 import oficina.Oficina;
+import oficina.Relatorio;
 import utilitarios.Debitos;
+import utilitarios.Multa;
 import utilitarios.Pedido;
 
 import java.util.*;
@@ -11,28 +13,7 @@ public class Programa {
         Scanner sc = new Scanner(System.in);
         sc.useLocale(Locale.US);
         Repositorio repositorio = new Repositorio();
-
-        // --- 6 Motos (Categoria A) ---
-        repositorio.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2, 35000.0f);
-        repositorio.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2, 22000.0f);
-        repositorio.salvarVeiculo("BMW", "G310 GS", "MOT-1003", 120.0f, 11.0f, "A", 2, 38000.0f);
-        repositorio.salvarVeiculo("Kawasaki", "Ninja 400", "MOT-1004", 3400.2f, 14.0f, "A", 2, 34000.0f);
-        repositorio.salvarVeiculo("Suzuki", "V-Strom 650", "MOT-1005", 8900.0f, 20.0f, "A", 2, 45000.0f);
-        repositorio.salvarVeiculo("Ducati", "Scrambler", "MOT-1006", 450.7f, 13.5f, "A", 2, 55000.0f);
-
-        // --- 6 Carros (Categoria B) ---
-        repositorio.salvarVeiculo("Toyota", "Corolla", "CAR-2001", 15000.0f, 50.0f, "B", 4, 120000.0f);
-        repositorio.salvarVeiculo("Volkswagen", "Golf", "CAR-2002", 22500.8f, 51.0f, "B", 4, 95000.0f);
-        repositorio.salvarVeiculo("Honda", "Civic", "CAR-2003", 5400.0f, 56.0f, "B", 4, 110000.0f);
-        repositorio.salvarVeiculo("Hyundai", "HB20", "CAR-2004", 32000.5f, 50.0f, "B", 4, 70000.0f);
-        repositorio.salvarVeiculo("Chevrolet", "Onix", "CAR-2005", 1200.0f, 44.0f, "B", 4, 65000.0f);
-        repositorio.salvarVeiculo("Ford", "Focus", "CAR-2006", 45600.3f, 55.0f, "B", 5, 80000.0f);
-
-        // --- 4 Vans (Categoria C) ---
-        repositorio.salvarVeiculo("Mercedes", "Sprinter", "VAN-3001", 67000.0f, 75.0f, "C", 2, 180000.0f);
-        repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2, 160000.0f);
-        repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2, 155000.0f);
-        repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2, 170000.0f);
+        carregarFrota(repositorio);
 
         List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorio.listarVeiculos());
         Oficina oficina = new Oficina();
@@ -51,7 +32,8 @@ public class Programa {
                     =====================================
                     [1] Listar veículos
                     [2] Alugar veículo
-                    [3] Registrar retorno
+                    [3] Registrar retorno / pagar pedidos
+                    [4] Pagar multas e débitos
                     [5] Encerrar programa
                     =====================================
                     Digite:""");
@@ -172,15 +154,23 @@ public class Programa {
                             case 1 -> {
                                 System.out.print("Digite o CPF: ");
                                 int CPF = sc.nextInt();
-                                Debitos pedido = pedidos.stream().filter(x -> CPF == x.getCliente().getCPF()).findFirst().orElse(null);
+                                Pedido pedido = pedidos.stream().filter(x -> CPF == x.getCliente().getCPF()).findFirst().orElse(null);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                     opt2 = 4;
                                 } else {
                                     pedido.getVeiculoAlugado().retornar();
-
                                     pagar(pedido, sc);
+                                    // Pede para a oficina um relatório de condição pós-uso do cliente
+                                    Relatorio relatorio = oficina.revisaoPosUso(pedido);
+                                    // Envia o relatório para o método estático que verifica se o dano
+                                    // gerado foi passível de multa ao cliente, retornando a multa ou
+                                    // null, caso não deva ser cobrado do mesmo
+                                    Multa multa = Multa.calcMulta(relatorio, pedido);
+                                    if (multa != null)
+                                        pedido.getCliente().setMultas(multa);
+                                    // Falta chamar a função que pede o pagamento das dívidas
                                 }
                             }
 
@@ -255,6 +245,30 @@ public class Programa {
 
         sc.close();
     }
+
+    public static void carregarFrota(Repositorio repositorio) {
+        // --- 6 Motos (Categoria A) ---
+        repositorio.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2, 35000.0f);
+        repositorio.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2, 22000.0f);
+        repositorio.salvarVeiculo("BMW", "G310 GS", "MOT-1003", 120.0f, 11.0f, "A", 2, 38000.0f);
+        repositorio.salvarVeiculo("Kawasaki", "Ninja 400", "MOT-1004", 3400.2f, 14.0f, "A", 2, 34000.0f);
+        repositorio.salvarVeiculo("Suzuki", "V-Strom 650", "MOT-1005", 8900.0f, 20.0f, "A", 2, 45000.0f);
+        repositorio.salvarVeiculo("Ducati", "Scrambler", "MOT-1006", 450.7f, 13.5f, "A", 2, 55000.0f);
+
+        // --- 6 Carros (Categoria B) ---
+        repositorio.salvarVeiculo("Toyota", "Corolla", "CAR-2001", 15000.0f, 50.0f, "B", 4, 120000.0f);
+        repositorio.salvarVeiculo("Volkswagen", "Golf", "CAR-2002", 22500.8f, 51.0f, "B", 4, 95000.0f);
+        repositorio.salvarVeiculo("Honda", "Civic", "CAR-2003", 5400.0f, 56.0f, "B", 4, 110000.0f);
+        repositorio.salvarVeiculo("Hyundai", "HB20", "CAR-2004", 32000.5f, 50.0f, "B", 4, 70000.0f);
+        repositorio.salvarVeiculo("Chevrolet", "Onix", "CAR-2005", 1200.0f, 44.0f, "B", 4, 65000.0f);
+        repositorio.salvarVeiculo("Ford", "Focus", "CAR-2006", 45600.3f, 55.0f, "B", 5, 80000.0f);
+
+        // --- 4 Vans (Categoria C) ---
+        repositorio.salvarVeiculo("Mercedes", "Sprinter", "VAN-3001", 67000.0f, 75.0f, "C", 2, 180000.0f);
+        repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2, 160000.0f);
+        repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2, 155000.0f);
+        repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2, 170000.0f);
+    }
     public static void exibirVeiculo(Veiculo v) {
         System.out.printf("""
                             -------------
@@ -304,7 +318,7 @@ public class Programa {
     public static void pagar(Debitos debito, Scanner sc) {
         System.out.println(debito);
         System.out.print("Digite o valor do pagamento:\nR$");
-        float pagamento = sc.nextFloat();
+        double pagamento = sc.nextDouble();
         System.out.println(debito.pagar(pagamento));
         if (!debito.isPaga()) {
             System.out.println("Cliente ficará em dívida e não poderá alugar demais veículos.");

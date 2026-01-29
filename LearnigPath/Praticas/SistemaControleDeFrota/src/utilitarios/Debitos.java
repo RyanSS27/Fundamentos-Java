@@ -5,11 +5,11 @@ import frota.Veiculo;
 public abstract class Debitos {
     protected Cliente cliente;
     protected Veiculo veiculoAlugado;
-    protected float valor;
+    protected double valor;
     protected String descricao;
     protected boolean paga;
 
-    public Debitos(Cliente cliente, Veiculo veiculoAlugado, float valor, String descricao) {
+    public Debitos(Cliente cliente, Veiculo veiculoAlugado, double valor, String descricao) {
         this.cliente = cliente;
         this.veiculoAlugado = veiculoAlugado;
         this.valor = valor;
@@ -21,7 +21,7 @@ public abstract class Debitos {
     @Override
     public abstract String toString();
 
-    public String pagar(float pagamento) {
+    public String pagar(double pagamento) {
         if (pagamento <= 0) {
             return "Valor inválido";
         }
@@ -34,7 +34,7 @@ public abstract class Debitos {
             this.paga = true;
             return "Dívida quitada com sucesso!";
         } else {
-            float troco = pagamento - valor;
+            double troco = pagamento - valor;
             this.valor = 0;
             this.paga = true;
             return "Dívida quitada! Seu troco é: R$ " + troco;
@@ -57,11 +57,11 @@ public abstract class Debitos {
         this.veiculoAlugado = veiculoAlugado;
     }
 
-    public float getValor() {
+    public double getValor() {
         return valor;
     }
 
-    public void setValor(float valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 

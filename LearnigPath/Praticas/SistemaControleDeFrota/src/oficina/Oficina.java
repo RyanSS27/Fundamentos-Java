@@ -145,8 +145,6 @@ public class Oficina {
                 }
             };
             RelatorioCondicao relatorioCondicao = new RelatorioCondicao(pedido.getVeiculoAlugado().getPlaca(), possivelCausa, descricao, pedido.getVeiculoAlugado().getNivelDano());
-            if (nivelDano > 3)
-                Debitos multa = new Multa(relatorioCondicao, pedido);
             return relatorioCondicao;
         } else {
             pedido.getVeiculoAlugado().setNivelDano(0);

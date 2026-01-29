@@ -3,7 +3,7 @@ package utilitarios;
 import frota.Veiculo;
 
 public class Pedido extends Debitos {
-    public Pedido(Cliente cliente, Veiculo veiculoAlugado, float valor, String descricao) {
+    public Pedido(Cliente cliente, Veiculo veiculoAlugado, double valor, String descricao) {
         super(cliente, veiculoAlugado, valor, descricao);
     }
 
