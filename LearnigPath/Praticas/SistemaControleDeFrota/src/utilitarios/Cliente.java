@@ -8,11 +8,18 @@ import java.util.List;
 // deve receber também multas de trânsito e multa por ferrar com o carro ao fechar a conta
 public class Cliente {
     private String nome;
-    private long CPF;
+    private final long CPF;
     private List<Debitos> historicoPedidos = new ArrayList<>();
     private List<Debitos> multas = new ArrayList<>(); // Multas por danos ao patrimônio
     private boolean aptoLocacao;
     private double totalDebitos;
+
+    public Cliente(String nome, long CPF) {
+        this.nome = nome;
+        this.CPF = CPF;
+        this.atualizarDadosFinanceiros();
+    }
+
 
     public String getNome() {
         return nome;
@@ -83,7 +90,6 @@ public class Cliente {
         // 2. Com o que sobrou, tenta pagar as multas
         saldoParaGastar = tentarPagarLista(multas, saldoParaGastar);
 
-        // Atualiza status final
         atualizarDadosFinanceiros();
 
         double troco = saldoParaGastar;
@@ -98,10 +104,9 @@ public class Cliente {
         }
     }
 
-    // Método auxiliar simples para não repetir código
     private double tentarPagarLista(List<Debitos> listaDebitos, double saldo) {
         for (Debitos debito : listaDebitos) {
-            // Se acabou o dinheiro, para o loop
+            // Interrompe o loop caso o direito acabe
             if (saldo <= 0) break;
 
             if (!debito.isPaga()) {
@@ -112,7 +117,7 @@ public class Cliente {
                     debito.pagar(valorDivida);
                     saldo -= valorDivida;
                 } else {
-                    // Paga o que dá (parcial)
+                    // Paga o possível
                     debito.pagar(saldo);
                     saldo = 0;
                 }

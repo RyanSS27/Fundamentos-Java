@@ -1,12 +1,13 @@
+package repositorios;
+
 import frota.Veiculo;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Repositorio implements AcessoRepositorio {
+public class RepositorioVeiculos implements AcessoRepositorioVeiculos {
     private List<Veiculo> frota = new ArrayList<>();
 
     @Override

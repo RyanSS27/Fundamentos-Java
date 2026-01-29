@@ -1,6 +1,7 @@
 import frota.Veiculo;
 import oficina.Oficina;
 import oficina.Relatorio;
+import repositorios.RepositorioVeiculos;
 import utilitarios.Debitos;
 import utilitarios.Multa;
 import utilitarios.Pedido;
@@ -12,10 +13,10 @@ public class Programa {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         sc.useLocale(Locale.US);
-        Repositorio repositorio = new Repositorio();
-        carregarFrota(repositorio);
+        RepositorioVeiculos repositorioVeiculos = new RepositorioVeiculos();
+        carregarFrota(repositorioVeiculos);
 
-        List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorio.listarVeiculos());
+        List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorioVeiculos.listarVeiculos());
         Oficina oficina = new Oficina();
         for (Veiculo vrumVrum : frotaParaConcerto) {
             System.out.println(oficina.preparacao(vrumVrum));
@@ -55,7 +56,7 @@ public class Programa {
                         opt2 = sc.nextInt();
                         switch (opt2) {
                             case 1 -> {
-                                List<Veiculo> duplicataDados = new ArrayList<>(repositorio.listarVeiculos());
+                                List<Veiculo> duplicataDados = new ArrayList<>(repositorioVeiculos.listarVeiculos());
                                 duplicataDados.forEach(v -> exibirVeiculo(v));
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -66,7 +67,7 @@ public class Programa {
                             }
 
                             case 2 -> {
-                                List<Veiculo> categoriaA = new ArrayList<>(repositorio.listarVeiculos("A"));
+                                List<Veiculo> categoriaA = new ArrayList<>(repositorioVeiculos.listarVeiculos("A"));
                                 listarVeiculos(categoriaA);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -77,7 +78,7 @@ public class Programa {
                             }
 
                             case 3 -> {
-                                List<Veiculo> categoriaB = new ArrayList<>(repositorio.listarVeiculos("B"));
+                                List<Veiculo> categoriaB = new ArrayList<>(repositorioVeiculos.listarVeiculos("B"));
                                 listarVeiculos(categoriaB);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -88,7 +89,7 @@ public class Programa {
                             }
 
                             case 4 -> {
-                                List<Veiculo> categoriaC = new ArrayList<>(repositorio.listarVeiculos("C"));
+                                List<Veiculo> categoriaC = new ArrayList<>(repositorioVeiculos.listarVeiculos("C"));
                                 listarVeiculos(categoriaC);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -120,15 +121,15 @@ public class Programa {
                         System.out.println("=====================================");
                         switch (opt2) {
                             case 1 -> {
-                                alugarVeiculo("A", repositorio, sc);
+                                alugarVeiculo("A", repositorioVeiculos, sc);
                             }
 
                             case 2 -> {
-                                alugarVeiculo("B", repositorio, sc);
+                                alugarVeiculo("B", repositorioVeiculos, sc);
                             }
 
                             case 3 -> {
-                                alugarVeiculo("C", repositorio, sc);
+                                alugarVeiculo("C", repositorioVeiculos, sc);
                             }
 
                             case 4 -> System.out.println("Cancelando..");
@@ -246,28 +247,28 @@ public class Programa {
         sc.close();
     }
 
-    public static void carregarFrota(Repositorio repositorio) {
+    public static void carregarFrota(RepositorioVeiculos repositorioVeiculos) {
         // --- 6 Motos (Categoria A) ---
-        repositorio.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2, 35000.0f);
-        repositorio.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2, 22000.0f);
-        repositorio.salvarVeiculo("BMW", "G310 GS", "MOT-1003", 120.0f, 11.0f, "A", 2, 38000.0f);
-        repositorio.salvarVeiculo("Kawasaki", "Ninja 400", "MOT-1004", 3400.2f, 14.0f, "A", 2, 34000.0f);
-        repositorio.salvarVeiculo("Suzuki", "V-Strom 650", "MOT-1005", 8900.0f, 20.0f, "A", 2, 45000.0f);
-        repositorio.salvarVeiculo("Ducati", "Scrambler", "MOT-1006", 450.7f, 13.5f, "A", 2, 55000.0f);
+        repositorioVeiculos.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2, 35000.0f);
+        repositorioVeiculos.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2, 22000.0f);
+        repositorioVeiculos.salvarVeiculo("BMW", "G310 GS", "MOT-1003", 120.0f, 11.0f, "A", 2, 38000.0f);
+        repositorioVeiculos.salvarVeiculo("Kawasaki", "Ninja 400", "MOT-1004", 3400.2f, 14.0f, "A", 2, 34000.0f);
+        repositorioVeiculos.salvarVeiculo("Suzuki", "V-Strom 650", "MOT-1005", 8900.0f, 20.0f, "A", 2, 45000.0f);
+        repositorioVeiculos.salvarVeiculo("Ducati", "Scrambler", "MOT-1006", 450.7f, 13.5f, "A", 2, 55000.0f);
 
         // --- 6 Carros (Categoria B) ---
-        repositorio.salvarVeiculo("Toyota", "Corolla", "CAR-2001", 15000.0f, 50.0f, "B", 4, 120000.0f);
-        repositorio.salvarVeiculo("Volkswagen", "Golf", "CAR-2002", 22500.8f, 51.0f, "B", 4, 95000.0f);
-        repositorio.salvarVeiculo("Honda", "Civic", "CAR-2003", 5400.0f, 56.0f, "B", 4, 110000.0f);
-        repositorio.salvarVeiculo("Hyundai", "HB20", "CAR-2004", 32000.5f, 50.0f, "B", 4, 70000.0f);
-        repositorio.salvarVeiculo("Chevrolet", "Onix", "CAR-2005", 1200.0f, 44.0f, "B", 4, 65000.0f);
-        repositorio.salvarVeiculo("Ford", "Focus", "CAR-2006", 45600.3f, 55.0f, "B", 5, 80000.0f);
+        repositorioVeiculos.salvarVeiculo("Toyota", "Corolla", "CAR-2001", 15000.0f, 50.0f, "B", 4, 120000.0f);
+        repositorioVeiculos.salvarVeiculo("Volkswagen", "Golf", "CAR-2002", 22500.8f, 51.0f, "B", 4, 95000.0f);
+        repositorioVeiculos.salvarVeiculo("Honda", "Civic", "CAR-2003", 5400.0f, 56.0f, "B", 4, 110000.0f);
+        repositorioVeiculos.salvarVeiculo("Hyundai", "HB20", "CAR-2004", 32000.5f, 50.0f, "B", 4, 70000.0f);
+        repositorioVeiculos.salvarVeiculo("Chevrolet", "Onix", "CAR-2005", 1200.0f, 44.0f, "B", 4, 65000.0f);
+        repositorioVeiculos.salvarVeiculo("Ford", "Focus", "CAR-2006", 45600.3f, 55.0f, "B", 5, 80000.0f);
 
         // --- 4 Vans (Categoria C) ---
-        repositorio.salvarVeiculo("Mercedes", "Sprinter", "VAN-3001", 67000.0f, 75.0f, "C", 2, 180000.0f);
-        repositorio.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2, 160000.0f);
-        repositorio.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2, 155000.0f);
-        repositorio.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2, 170000.0f);
+        repositorioVeiculos.salvarVeiculo("Mercedes", "Sprinter", "VAN-3001", 67000.0f, 75.0f, "C", 2, 180000.0f);
+        repositorioVeiculos.salvarVeiculo("Renault", "Master", "VAN-3002", 12000.4f, 80.0f, "C", 2, 160000.0f);
+        repositorioVeiculos.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2, 155000.0f);
+        repositorioVeiculos.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2, 170000.0f);
     }
     public static void exibirVeiculo(Veiculo v) {
         System.out.printf("""
@@ -282,10 +283,10 @@ public class Programa {
         veiculos.forEach(v -> exibirVeiculo(v));
     }
 
-    public static void alugarVeiculo(String categoria, Repositorio repositorio, Scanner sc) {
+    public static void alugarVeiculo(String categoria, RepositorioVeiculos repositorioVeiculos, Scanner sc) {
         int opt3 = 0;
         while (opt3 != 5) {
-            List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorio.listarVeiculos(categoria, true));
+            List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorioVeiculos.listarVeiculos(categoria, true));
             // Se haver veículos, ele segue o curso. Se não houver, retorna
             if (veiculosDisponiveis.size() > 0) {
                 for (int i = 1; i-1<veiculosDisponiveis.size(); i++) {

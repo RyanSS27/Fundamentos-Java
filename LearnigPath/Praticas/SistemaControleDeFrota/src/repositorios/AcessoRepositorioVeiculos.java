@@ -1,8 +1,10 @@
+package repositorios;
+
 import frota.Veiculo;
 
 import java.util.List;
 
-public interface AcessoRepositorio {
+public interface AcessoRepositorioVeiculos {
     public abstract void salvarVeiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes, float valor);
     // Deve retornar um array com os veículos desejados
 
