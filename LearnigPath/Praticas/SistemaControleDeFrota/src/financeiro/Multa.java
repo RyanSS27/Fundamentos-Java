@@ -1,7 +1,6 @@
-package utilitarios;
+package financeiro;
 
 import oficina.Relatorio;
-import oficina.RelatorioCondicao;
 
 public class Multa extends Debitos {
     public static final int TAXA_PERDA_PATRIMONIO = 15;

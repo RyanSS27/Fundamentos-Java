@@ -1,4 +1,4 @@
-package utilitarios;
+package financeiro;
 
 import frota.Veiculo;
 

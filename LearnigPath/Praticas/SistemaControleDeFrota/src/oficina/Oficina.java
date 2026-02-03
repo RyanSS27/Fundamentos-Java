@@ -3,9 +3,7 @@ package oficina;
 // * Deve consertá-lo para as condições mínimas de locação nome: preparação
 
 import frota.Veiculo;
-import utilitarios.Debitos;
-import utilitarios.Multa;
-import utilitarios.Pedido;
+import financeiro.Pedido;
 
 import java.util.concurrent.ThreadLocalRandom;
 

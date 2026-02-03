@@ -1,10 +1,9 @@
 package frota;
 
 import oficina.Oficina;
-import utilitarios.Cliente;
+import financeiro.Cliente;
 
 import java.lang.Comparable;
-import java.util.Locale;
 
 public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     private static int qtdeVeiculosMembrosDaFrota;

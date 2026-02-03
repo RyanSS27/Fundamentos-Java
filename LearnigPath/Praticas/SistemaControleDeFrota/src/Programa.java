@@ -1,10 +1,11 @@
 import frota.Veiculo;
 import oficina.Oficina;
 import oficina.Relatorio;
+import repositorios.RepositorioDebitos;
 import repositorios.RepositorioVeiculos;
-import utilitarios.Debitos;
-import utilitarios.Multa;
-import utilitarios.Pedido;
+import financeiro.Debitos;
+import financeiro.Multa;
+import financeiro.Pedido;
 
 import java.util.*;
 
@@ -22,7 +23,7 @@ public class Programa {
             System.out.println(oficina.preparacao(vrumVrum));
         }
 
-        List<Debitos> pedidos = new ArrayList<>();
+        RepositorioDebitos repositorioPedidos = new RepositorioDebitos();
 
         System.out.println(Oficina.checkup(frotaParaConcerto.get(0)));
         int opt = 0;
@@ -153,9 +154,9 @@ public class Programa {
                         opt2 = sc.nextInt();
                         switch (opt2) {
                             case 1 -> {
-                                System.out.print("Digite o CPF: ");
-                                int CPF = sc.nextInt();
-                                Pedido pedido = pedidos.stream().filter(x -> CPF == x.getCliente().getCPF()).findFirst().orElse(null);
+                                System.out.print("Digite o cpf: ");
+                                long cpf = sc.nextInt();
+                                Pedido pedido = repositorioPedidos.procurarPedido(cpf, false);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
@@ -178,7 +179,7 @@ public class Programa {
                             case 2 -> {
                                 System.out.print("Informe a placa do veículo: ");
                                 String placa = sc.nextLine();
-                                Debitos pedido = pedidos.stream().filter(x -> placa.equals(x.getVeiculoAlugado().getPlaca())).findFirst().orElse(null);
+                                Debitos pedido = repositorioPedidos.procurarPedido(placa, false);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
@@ -189,6 +190,7 @@ public class Programa {
                             }
                             // Falta alterar o veículo para que conste que ele não esteja mais em locação
                             case 3 -> {
+                                List<Pedido> pedidos = repositorioPedidos.listarPedidos(false);
                                 if (pedidos.size() == 0) {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();

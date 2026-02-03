@@ -1,6 +1,6 @@
 package frota;
 
-import utilitarios.Cliente;
+import financeiro.Cliente;
 
 public interface InterfaceVeiculo {
     public abstract float abastecer(float litros);

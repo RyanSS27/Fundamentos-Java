@@ -1,6 +1,4 @@
-package utilitarios;
-
-import frota.Veiculo;
+package financeiro;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +29,6 @@ public class Cliente {
 
     public long getCPF() {
         return CPF;
-    }
-
-    public void setCPF(int CPF) {
-        this.CPF = CPF;
     }
 
 //    public Debitos getPedido() {
