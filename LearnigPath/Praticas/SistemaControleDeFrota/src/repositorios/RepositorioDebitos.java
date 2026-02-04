@@ -35,7 +35,7 @@ public class RepositorioDebitos implements AcessoRepositorioDebitos {
     @Override
     public Pedido procurarPedido(String placa, boolean pago) {
         return pedidos.stream().filter(
-                x -> x.getVeiculoAlugado().getPlaca() == placa && x.isPaga() == pago)
+                x -> x.getVeiculoAlugado().getPlaca().equals(placa) && x.isPaga() == pago)
                 .findFirst().orElse(null);
     }
 
@@ -59,9 +59,9 @@ public class RepositorioDebitos implements AcessoRepositorioDebitos {
     }
 
     @Override
-    public List<Debitos> debitosGeraisCliente(long CPF) {
+    public List<Debitos> debitosGeraisCliente(long cpf, boolean pago) {
         List<Debitos> debitosGerais = Stream.concat(multas.stream(), pedidos.stream())
-                .filter(x -> x.getCliente().getCPF() == CPF)
+                .filter(x -> x.getCliente().getCPF() == cpf && x.isPaga() == pago)
                 .toList();
         // toList Faz com que a lista seja imutável
         // se adicionar um new ArrayList(debitosGerais), a lista se torna mutável

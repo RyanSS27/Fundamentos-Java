@@ -20,5 +20,5 @@ public interface AcessoRepositorioDebitos {
     public abstract List<Multa> listarMultas(boolean pago);
     public abstract Multa procurarMulta(long CPF, boolean pago);
 
-    public abstract List<Debitos> debitosGeraisCliente(long CPF);
+    public abstract List<Debitos> debitosGeraisCliente(long CPF, boolean pago);
 }
