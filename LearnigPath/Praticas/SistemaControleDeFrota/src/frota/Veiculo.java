@@ -99,14 +99,16 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     }
 
     @Override
-    public void serAlugado(Cliente locatario) {
+    public boolean serAlugado(Cliente locatario) {
         if (isEmCondicaoDeUso()) {
             setEmLocacao(true);
             setLocatario(locatario);
             this.setLimpo(false);
             setEmCondicaoDeUso();
+            return true;
         } else {
             System.out.println("O veículo não pode ser alugado.");
+            return false;
         }
     }
 

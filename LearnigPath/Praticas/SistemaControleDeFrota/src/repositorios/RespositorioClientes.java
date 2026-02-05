@@ -9,20 +9,24 @@ public class RespositorioClientes implements AcessoRepositorioClientes {
     private List<Cliente> clientes = new ArrayList<>();
 
     @Override
-    public void salvarCliente(String nome, long CPF) {
-        Cliente testeDuplicidade = clientes.stream().filter(x -> x.getCPF() == CPF).findFirst().orElse(null);
+    public String salvarCliente(String nome, long cpf) {
+        Cliente testeDuplicidade = pesquisarCliente(cpf);
         if (testeDuplicidade == null) {
-            clientes.add(new Cliente(nome, CPF));
+            clientes.add(new Cliente(nome, cpf));
+            return "Cliente cadastrado com sucesso!";
+        } else {
+            return "Cliente já possui cadastro: " + testeDuplicidade.toString();
         }
     }
 
     @Override
     public List<Cliente> listarClientes() {
-        return List.of();
+        return new ArrayList<>(clientes);
     }
 
     @Override
-    public Cliente pesquisarCliente(long CPF) {
-        return null;
+    public Cliente pesquisarCliente(long cpf) {
+        Cliente cliente = clientes.stream().filter(x -> x.getCPF() == cpf).findFirst().orElse(null);
+        return cliente;
     }
 }

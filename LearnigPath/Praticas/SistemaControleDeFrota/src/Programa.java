@@ -1,13 +1,12 @@
+import financeiro.*;
 import frota.Veiculo;
 import oficina.Oficina;
 import oficina.Relatorio;
-import repositorios.RepositorioDebitos;
-import repositorios.RepositorioVeiculos;
-import financeiro.Debitos;
-import financeiro.Multa;
-import financeiro.Pedido;
+import repositorios.*;
 
 import java.util.*;
+
+import static oficina.Oficina.*;
 
 
 public class Programa {
@@ -16,16 +15,19 @@ public class Programa {
         sc.useLocale(Locale.US);
         RepositorioVeiculos repositorioVeiculos = new RepositorioVeiculos();
         carregarFrota(repositorioVeiculos);
+        RespositorioClientes repositorioClientes = new RespositorioClientes();
+        RepositorioDebitos repositorioDebitos = new RepositorioDebitos();
+        ControleFinanceiro controleFinanceiro = new ControleFinanceiro(repositorioDebitos);
 
         List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorioVeiculos.listarVeiculos());
         Oficina oficina = new Oficina();
         for (Veiculo vrumVrum : frotaParaConcerto) {
-            System.out.println(oficina.preparacao(vrumVrum));
+            System.out.println(preparacao(vrumVrum));
         }
 
         RepositorioDebitos repositorioPedidos = new RepositorioDebitos();
 
-        System.out.println(Oficina.checkup(frotaParaConcerto.get(0)));
+        System.out.println(checkup(frotaParaConcerto.get(0)));
         int opt = 0;
         while (opt != 5) {
             System.out.print("""
@@ -122,15 +124,18 @@ public class Programa {
                         System.out.println("=====================================");
                         switch (opt2) {
                             case 1 -> {
-                                alugarVeiculo("A", repositorioVeiculos, sc);
+                                alugarVeiculo("A", repositorioVeiculos, repositorioClientes,
+                                        repositorioDebitos, controleFinanceiro, sc);
                             }
 
                             case 2 -> {
-                                alugarVeiculo("B", repositorioVeiculos, sc);
+                                alugarVeiculo("B", repositorioVeiculos, repositorioClientes,
+                                        repositorioDebitos, controleFinanceiro, sc);
                             }
 
                             case 3 -> {
-                                alugarVeiculo("C", repositorioVeiculos, sc);
+                                alugarVeiculo("C", repositorioVeiculos, repositorioClientes,
+                                        repositorioDebitos, controleFinanceiro, sc);
                             }
 
                             case 4 -> System.out.println("Cancelando..");
@@ -285,37 +290,117 @@ public class Programa {
         veiculos.forEach(v -> exibirVeiculo(v));
     }
 
-    public static void alugarVeiculo(String categoria, RepositorioVeiculos repositorioVeiculos, Scanner sc) {
-        int opt3 = 0;
-        while (opt3 != 5) {
-            List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorioVeiculos.listarVeiculos(categoria, true));
+    public static void alugarVeiculo(String categoria, AcessoRepositorioVeiculos repositorioVeiculos,
+                                     AcessoRepositorioClientes repositorioClientes,
+                                     AcessoRepositorioDebitos repositorioDebitos,
+                                     AcessoFinanceiro repositorioFinanceiro,
+                                     Scanner sc) {
+        boolean opt3 = true;
+        while (opt3) {
+            List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorioVeiculos.listarVeiculos(categoria,
+                    true));
             // Se haver veículos, ele segue o curso. Se não houver, retorna
-            if (veiculosDisponiveis.size() > 0) {
-                for (int i = 1; i-1<veiculosDisponiveis.size(); i++) {
+            if (veiculosDisponiveis.isEmpty()) {
+                for (int i = 1; (i-1) < (veiculosDisponiveis.size()); i++) {
                     System.out.println("""
                                                     ------- ID %d -------
                                                     Veículo: %s
                                                     Em locação: %b
                                                     Em condição de locação: %b
-                                                    """.formatted(i, veiculosDisponiveis.get(i-1), veiculosDisponiveis.get(i-1).isEmLocacao(), veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()));
+                                                    """.formatted(
+                                                            i,
+                                                            veiculosDisponiveis.get(i-1),
+                                                            veiculosDisponiveis.get(i-1).isEmLocacao(),
+                                                            veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()));
                 }
                 System.out.printf("[%d] Cancelar", veiculosDisponiveis.size() + 1);
                 System.out.println("Qual veículo deseja?");
-                opt3 = sc.nextInt() - 1;
-                if (opt3 == veiculosDisponiveis.size()) {
+                int opt4 = sc.nextInt() - 1;
+                if (opt4 == veiculosDisponiveis.size()) {
                     System.out.println("Voltando..");
-                    opt3 = 5;
-                } else if (opt3 > veiculosDisponiveis.size() || opt3 < 0) {
+                    opt3 = false;
+                } else if (opt4 > veiculosDisponiveis.size() || opt4 < 0) {
                     System.out.println("--- Digite um valor válido. Tente novamente. ---");
                 } else {
                     //Inserir a lógica de cadastro/verificação do cliente
-                    veiculosDisponiveis.get(opt3).serAlugado(null);
+                    System.out.println("Digite o CPF do cliente (ou \"0\" para cancelar):");
+                    long cpf = sc.nextLong();
+                    if (cpf == 0) {
+                        opt3 = false;
+                        System.out.println("Cancelando..");
+                    } else {
+                        Cliente cliente = repositorioClientes.pesquisarCliente(cpf);
+                        if(cliente == null) {
+                            sc.nextLine();
+                            System.out.println("Digite o nome do cliente:");
+                            String nome = sc.nextLine();
+                            repositorioClientes.salvarCliente(nome, cpf);
+                        } else {
+                            System.out.println("Cliente já cadastrado.\n" + cliente);
+                        }
+                        System.out.println("Digite por quantos dias será alugado:");
+                        int dias = sc.nextInt();
+                        double valorTotalDaLocacao = gerarValorLocacao(veiculosDisponiveis.get(opt4), dias);
+
+                        System.out.println("""
+                                =====================================
+                                Valor total da locação: R$%.2f
+                                Valor p/ dia: R$.2f
+                                -------------------------------------
+                                Deseja continuar?
+                                [\"0 para não\" | 1 para sim]
+                                """);
+                        int opt5 = sc.nextInt();
+                        if (opt5 == 1) {
+                            veiculosDisponiveis.get(opt4).serAlugado(cliente);
+                            repositorioDebitos.salvarPedido(
+                                    cliente,
+                                    veiculosDisponiveis.get(opt4),
+                                    valorTotalDaLocacao,
+                                    "Quer usar para viajar.");
+                            cliente.isAptoLocacao(repositorioFinanceiro);
+                            System.out.println("""
+                                    
+                                    Veículo alugado com sucesso!
+                                    """);
+                        } else {
+                            opt3 = false;
+                            System.out.println("Cancelando..");
+                        }
+                    }
+
                 }
             } else {
                 System.out.println("Não há veículos desta categoria disponíveis.");
-                opt3 = 5;
+                opt3 = false;
             }
         }
+    }
+
+    public static double gerarValorLocacao(Veiculo veiculo, int diasLocacao) {
+        // A lógica de negócio desta função foi gerada por IA, já que o foco não era este
+        // 1. Definimos uma diária base proporcional ao valor de mercado do veículo
+        // Exemplo: 0.4% do valor do veículo por dia
+        double diariaBase = veiculo.getValor() * 0.004;
+
+        // 2. Ajuste por Categoria de CNH/Veículo
+        double multiplicadorCategoria = switch (veiculo.getCategoria().toUpperCase()) {
+            case "A" -> 0.7;  // Motos costumam ter diárias mais baratas
+            case "B" -> 1.0;  // Padrão (Carros de passeio/SUVs)
+            case "C" -> 1.4;  // Caminhões leves/Cargas exigem manutenção e seguro maiores
+            default -> 1.0;
+        };
+
+        // 3. Cálculo do valor bruto
+        double valorFinal = (diariaBase * multiplicadorCategoria) * diasLocacao;
+
+        // 4. Bônus por conservação (Prática de OO)
+        // Se o veículo tem quilometragem muito baixa, podemos cobrar um "premium"
+        if (veiculo.getQuilometragem() < 5000) {
+            valorFinal *= 1.10; // 10% de acréscimo para veículos seminovos (cheirinho de novo!)
+        }
+
+        return valorFinal;
     }
 
     public static void pagar(Debitos debito, Scanner sc) {

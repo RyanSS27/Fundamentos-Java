@@ -1,5 +1,7 @@
 package financeiro;
 
+import repositorios.AcessoRepositorioDebitos;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class Cliente {
         this.nome = nome;
         this.CPF = CPF;
         this.aptoLocacao = true;
+        totalDebitos = 0.0;
     }
 
 
@@ -29,12 +32,32 @@ public class Cliente {
         return CPF;
     }
 
-    public boolean isAptoLocacao(ControleFinanceiro controle) {
+    public boolean isAptoLocacao(AcessoFinanceiro controle) {
         atualizarDadosFinanceiros(controle);
         return aptoLocacao;
     }
 
-    public void atualizarDadosFinanceiros(ControleFinanceiro controle) {
+    public void atualizarDadosFinanceiros(AcessoFinanceiro controle) {
             aptoLocacao = controle.isFinanceiramenteElegivel(getCPF());
+            if (!aptoLocacao) setTotalDebitos(controle.calcularDebitos(getCPF()));
+    }
+
+    private void setTotalDebitos(double valor) {
+        this.totalDebitos = valor;
+    }
+
+    public double getTotalDebitos(AcessoFinanceiro controle) {
+        atualizarDadosFinanceiros(controle);
+        return this.totalDebitos;
+    }
+
+    @Override
+    public String toString() {
+        return """
+                ------- Cliente -------
+                Nome: %s
+                CPF: %d
+                -----------------------
+                """.formatted(getNome(), getCPF());
     }
 }

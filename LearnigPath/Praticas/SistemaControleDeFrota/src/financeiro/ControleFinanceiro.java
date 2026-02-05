@@ -15,9 +15,20 @@ public class ControleFinanceiro implements AcessoFinanceiro {
     public boolean isFinanceiramenteElegivel(long cpf) {
         List<Debitos> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
         // Se forem retornadas quaisquer cobranças relacionadas ao cpf não pagas, ele é inelegível
-        if(!pendencias.isEmpty())
-            return false;
-        return true;
+        return pendencias.isEmpty();
+    }
+
+    @Override
+    public double calcularDebitos(long cpf) {
+        List<Debitos> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
+        if(pendencias.isEmpty()) return 0.0;
+
+        double dividaTotal = 0.0;
+        for(Debitos p : pendencias) {
+            dividaTotal += p.getValor();
+        }
+
+        return dividaTotal;
     }
 
     @Override

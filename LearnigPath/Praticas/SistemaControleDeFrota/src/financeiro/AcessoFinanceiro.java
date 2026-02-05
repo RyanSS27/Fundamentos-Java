@@ -1,7 +1,8 @@
 package financeiro;
 
 public interface AcessoFinanceiro {
-    public abstract boolean isFinanceiramenteElegivel(long CPF);
+    public abstract boolean isFinanceiramenteElegivel(long cpf);
+    public abstract double calcularDebitos(long cpf);
     /*
         A função deve receber a lista de pendências filtradas pelo CPF
         do cliente, através do método debitosGeraisCliente(long CPF)

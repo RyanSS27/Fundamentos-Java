@@ -15,7 +15,6 @@ public abstract class Debitos {
         this.valor = valor;
         this.descricao = descricao;
         this.paga = false;
-        cliente.setPedido(this);
     }
 
     @Override
