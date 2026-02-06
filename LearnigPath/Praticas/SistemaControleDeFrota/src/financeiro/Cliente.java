@@ -57,7 +57,8 @@ public class Cliente {
                 ------- Cliente -------
                 Nome: %s
                 CPF: %d
+                Apto a locação: %b
                 -----------------------
-                """.formatted(getNome(), getCPF());
+                """.formatted(getNome(), getCPF(), aptoLocacao);
     }
 }

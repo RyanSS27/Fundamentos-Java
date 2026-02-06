@@ -185,13 +185,20 @@ public class Programa {
                             }
 
                             case 3 -> {
-                                List<Pedido> pedidos = repositorioPedidos.listarPedidos(false);
+                                //Falta também, garantir que, após a locação, o cliente fique inápto
+                                List<Debitos> pedidos = repositorioPedidos.listarPedidos(false);
                                 if (pedidos.isEmpty()) {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                 } else {
-                                    long cpf = pedidos.get(0).getCliente().getCPF();
-                                    pagarDebitos(cpf, controleFinanceiro, repositorioDebitos, sc);
+                                    listarDebitos(
+                                            pedidos,
+                                            repositorioVeiculos,
+                                            repositorioClientes,
+                                            repositorioDebitos,
+                                            controleFinanceiro,
+                                            sc
+                                    );
                                 }
                                 opt2 = 4;
                             }
@@ -202,6 +209,7 @@ public class Programa {
                         }
                     }
                 }
+                // Implementar o pagamento de débitos.
                 case 5 -> System.out.println("Encerrando o programa..");
                 default -> System.out.println("Opção inválida");
             }
@@ -290,7 +298,7 @@ public class Programa {
                                                             veiculosDisponiveis.get(i-1).isEmLocacao(),
                                                             veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()));
                 }
-                System.out.printf("[%d] Cancelar", veiculosDisponiveis.size() + 1);
+                System.out.printf("[%d] Cancelar\n", veiculosDisponiveis.size() + 1);
                 System.out.println("Qual veículo deseja?");
                 int opt4 = sc.nextInt() - 1;
                 if (opt4 == veiculosDisponiveis.size()) {
@@ -316,11 +324,12 @@ public class Programa {
                         } else {
                             System.out.println("Cliente já cadastrado.\n" + cliente);
                         }
-                        System.out.println("Digite por quantos dias será alugado:");
-                        int dias = sc.nextInt();
-                        double valorTotalDaLocacao = gerarValorLocacao(veiculosDisponiveis.get(opt4), dias);
+                        if (cliente.isAptoLocacao(repositorioFinanceiro)) {
+                            System.out.println("Digite por quantos dias será alugado:");
+                            int dias = sc.nextInt();
+                            double valorTotalDaLocacao = gerarValorLocacao(veiculosDisponiveis.get(opt4), dias);
 
-                        System.out.println("""
+                            System.out.println("""
                                 =====================================
                                 Valor total da locação: R$%.2f
                                 Valor p/ dia: R$%.2f
@@ -328,22 +337,27 @@ public class Programa {
                                 Deseja continuar?
                                 [\"0 para não\" | 1 para sim]
                                 """.formatted(valorTotalDaLocacao, (valorTotalDaLocacao/dias)));
-                        int opt5 = sc.nextInt();
-                        if (opt5 == 1) {
-                            veiculosDisponiveis.get(opt4).serAlugado(cliente);
-                            repositorioDebitos.salvarPedido(
-                                    cliente,
-                                    veiculosDisponiveis.get(opt4),
-                                    valorTotalDaLocacao,
-                                    "Quer usar para viajar.");
-                            cliente.isAptoLocacao(repositorioFinanceiro);
-                            System.out.println("""
+                            int opt5 = sc.nextInt();
+                            if (opt5 == 1) {
+                                veiculosDisponiveis.get(opt4).serAlugado(cliente);
+                                repositorioDebitos.salvarPedido(
+                                        cliente,
+                                        veiculosDisponiveis.get(opt4),
+                                        valorTotalDaLocacao,
+                                        "Quer usar para viajar.");
+                                cliente.isAptoLocacao(repositorioFinanceiro);
+                                System.out.println("""
                                     =====================================
                                     Veículo alugado com sucesso!
                                     """);
+                            } else {
+                                System.out.println("Cancelando..");
+                            }
                         } else {
-                            System.out.println("Cancelando..");
+                            System.out.println("Cliente não é apto a locação no momento." +
+                                    "\nDívidas pendentes.");
                         }
+
                         opt3 = false;
                     }
 
@@ -418,6 +432,79 @@ public class Programa {
             System.out.print("Digite o valor do pagamento:\nR$");
             double pagamento = sc.nextDouble();
             System.out.println(controleFinanceiro.pagarPendencias(cpf, pagamento));
+            debitos.get(0).getCliente().isAptoLocacao(controleFinanceiro);
+        }
+    }
+
+    public static void listarDebitos(List<Debitos> debitos,
+                              AcessoRepositorioVeiculos repositorioVeiculos,
+                              AcessoRepositorioClientes repositorioClientes,
+                              AcessoRepositorioDebitos repositorioDebitos,
+                              AcessoFinanceiro controleFinanceiro,
+                              Scanner sc) {
+        boolean opt3 = true;
+        while (opt3) {
+            // Se haver veículos, ele segue o curso. Se não houver, retorna
+            if (!debitos.isEmpty()) {
+                for (int i = 1; (i - 1) < (debitos.size()); i++) {
+                    Debitos debito = debitos.get(i - 1);
+                    String descricaoAuxiliar;
+                    if (debito.getClass().getSimpleName().equals("Multa")) {
+                        debito = (Multa) debito;
+                        descricaoAuxiliar = """
+                                Nível de dano: %d
+                                Descrição: %s
+                                ---------------------
+                                """.formatted(((Multa) debito).getNivelDano(), debito.getDescricao());
+                    } else {
+                        descricaoAuxiliar = "---------------------";
+                    }
+                    System.out.println("""
+                            ------- ID %d -------
+                            Cobrança: %s
+                            ---------------------
+                            Nome cliente: %s
+                            CPF: %d
+                            ---------------------
+                            Veículo: %s
+                            Placa: %s
+                            %s
+                            Valor: R$ %.2f
+                            """.formatted(
+                            i,
+                            debito.getClass().getSimpleName(),
+                            debito.getCliente().getNome(),
+                            debito.getCliente().getCPF(),
+                            debito.getVeiculoAlugado().getMarca()
+                                    + debito.getVeiculoAlugado().getModelo(),
+                            debito.getVeiculoAlugado().getPlaca(),
+                            descricaoAuxiliar,
+                            debito.getValor()
+                    ));
+                }
+                System.out.printf("[%d] Cancelar\n", debitos.size() + 1);
+                System.out.println("Qual pendência quer selecionar?");
+                int opt4 = sc.nextInt() - 1;
+                if (opt4 == debitos.size()) {
+                    System.out.println("Voltando..");
+                    opt3 = false;
+                } else if (opt4 > debitos.size() || opt4 < 0) {
+                    System.out.println("--- Digite um valor válido. Tente novamente. ---");
+                } else {
+                    Debitos debito = debitos.get(opt4);
+                    // Mostra não só o pedido ou multa, mas todas as cobranças
+                    pagarDebitos(
+                            debito.getCliente().getCPF(),
+                            (ControleFinanceiro) controleFinanceiro,
+                            repositorioDebitos,
+                            sc
+                    );
+                    opt3 = false;
+                }
+            } else {
+                System.out.println("Não há veículos desta categoria disponíveis.");
+                opt3 = false;
+            }
         }
     }
 }

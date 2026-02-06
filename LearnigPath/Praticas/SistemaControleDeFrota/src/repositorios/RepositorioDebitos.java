@@ -28,7 +28,7 @@ public class RepositorioDebitos implements AcessoRepositorioDebitos {
     }
 
     @Override
-    public List<Pedido> listarPedidos(boolean pago) {
+    public List<Debitos> listarPedidos(boolean pago) {
         return new ArrayList<>(pedidos.stream().filter(x -> x.isPaga() == pago).collect(Collectors.toList()));
     }
 
