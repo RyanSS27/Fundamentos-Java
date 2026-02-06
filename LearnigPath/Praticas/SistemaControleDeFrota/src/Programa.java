@@ -175,8 +175,8 @@ public class Programa {
                                     // gerado foi passível de multa ao cliente, retornando a multa ou
                                     // null, caso não deva ser cobrado do mesmo
                                     Multa multa = Multa.calcMulta(relatorio, pedido);
-                                    if (multa != null)
-                                        pedido.getCliente().setMultas(multa);
+                                    if (multa != null);
+                                        //pedido.getCliente().setMultas(multa);
                                     // Falta chamar a função que pede o pagamento das dívidas
                                 }
                             }
@@ -300,7 +300,7 @@ public class Programa {
             List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorioVeiculos.listarVeiculos(categoria,
                     true));
             // Se haver veículos, ele segue o curso. Se não houver, retorna
-            if (veiculosDisponiveis.isEmpty()) {
+            if (!veiculosDisponiveis.isEmpty()) {
                 for (int i = 1; (i-1) < (veiculosDisponiveis.size()); i++) {
                     System.out.println("""
                                                     ------- ID %d -------
@@ -335,6 +335,7 @@ public class Programa {
                             System.out.println("Digite o nome do cliente:");
                             String nome = sc.nextLine();
                             repositorioClientes.salvarCliente(nome, cpf);
+                            cliente = repositorioClientes.pesquisarCliente(cpf);
                         } else {
                             System.out.println("Cliente já cadastrado.\n" + cliente);
                         }
@@ -345,11 +346,11 @@ public class Programa {
                         System.out.println("""
                                 =====================================
                                 Valor total da locação: R$%.2f
-                                Valor p/ dia: R$.2f
+                                Valor p/ dia: R$%.2f
                                 -------------------------------------
                                 Deseja continuar?
                                 [\"0 para não\" | 1 para sim]
-                                """);
+                                """.formatted(valorTotalDaLocacao, (valorTotalDaLocacao/dias)));
                         int opt5 = sc.nextInt();
                         if (opt5 == 1) {
                             veiculosDisponiveis.get(opt4).serAlugado(cliente);
@@ -360,13 +361,13 @@ public class Programa {
                                     "Quer usar para viajar.");
                             cliente.isAptoLocacao(repositorioFinanceiro);
                             System.out.println("""
-                                    
+                                    =====================================
                                     Veículo alugado com sucesso!
                                     """);
                         } else {
-                            opt3 = false;
                             System.out.println("Cancelando..");
                         }
+                        opt3 = false;
                     }
 
                 }

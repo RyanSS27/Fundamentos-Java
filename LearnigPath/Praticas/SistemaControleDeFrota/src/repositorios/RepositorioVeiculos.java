@@ -28,6 +28,9 @@ public class RepositorioVeiculos implements AcessoRepositorioVeiculos {
 
     @Override
     public List<Veiculo> listarVeiculos(String categoria, boolean emCondicaoDeUso) {
-        return new ArrayList<>(frota.stream().filter(x -> x.isEmCondicaoDeUso() == emCondicaoDeUso).collect(Collectors.toList()));
+        return frota.stream()
+                .filter(x -> x.isEmCondicaoDeUso() == emCondicaoDeUso)
+                .filter(x -> x.getCategoria().equalsIgnoreCase(categoria))
+                .toList();
     }
 }
