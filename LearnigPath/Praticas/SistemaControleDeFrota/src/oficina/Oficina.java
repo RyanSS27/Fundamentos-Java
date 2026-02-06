@@ -142,8 +142,7 @@ public class Oficina {
                     yield "Valor inválido";
                 }
             };
-            RelatorioCondicao relatorioCondicao = new RelatorioCondicao(pedido.getVeiculoAlugado().getPlaca(), possivelCausa, descricao, pedido.getVeiculoAlugado().getNivelDano());
-            return relatorioCondicao;
+            return new RelatorioCondicao(pedido.getVeiculoAlugado().getPlaca(), possivelCausa, descricao, pedido.getVeiculoAlugado().getNivelDano());
         } else {
             pedido.getVeiculoAlugado().setNivelDano(0);
             String descricao = "PT no carro.";

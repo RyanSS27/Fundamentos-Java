@@ -1,5 +1,7 @@
 package financeiro;
 
+import oficina.Relatorio;
+import oficina.RelatorioCondicao;
 import repositorios.RepositorioDebitos;
 
 import java.util.List;
@@ -49,7 +51,8 @@ public class ControleFinanceiro implements AcessoFinanceiro {
         if (dividaAtual == 0.0) {
             return "Divida paga com sucesso!" + (pagamento > 0? " Troco de R$ " + pagamento: " Sem troco");
         } else {
-            return "Pagamento parcial realizado. Ainda deve: R$ " + dividaAtual;
+            return ("Pagamento parcial realizado. Ainda deve: R$ %.2f" +
+                    "\nCliente ficará em dívida e não poderá alugar demais veículos.").formatted(dividaAtual);
         }
     }
 
@@ -72,6 +75,19 @@ public class ControleFinanceiro implements AcessoFinanceiro {
         }
 
         return pagamento; // Retorna quanto sobrou
+    }
+
+    @Override
+    public Double calcMulta(Relatorio relatorioCondicao, Pedido pedido) {
+        // Se o dano for < 3, a cobrança não é atribuída ao cliente
+        if (relatorioCondicao.getNivelDano() > 3 && relatorioCondicao.getNivelDano() < 10) {
+            // A cada nível de dano, 5% a mais do veículo é cobrado
+            // Exemplo: Nível 4 = 20%, Nível 9 = 45%
+            double percentualDano = relatorioCondicao.getNivelDano() * 0.05f;
+            return percentualDano * pedido.veiculoAlugado.getValor();
+        } else {
+            return null;
+        }
     }
 
     @Override

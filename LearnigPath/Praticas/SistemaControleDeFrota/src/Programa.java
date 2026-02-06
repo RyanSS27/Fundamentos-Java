@@ -60,7 +60,7 @@ public class Programa {
                         switch (opt2) {
                             case 1 -> {
                                 List<Veiculo> duplicataDados = new ArrayList<>(repositorioVeiculos.listarVeiculos());
-                                duplicataDados.forEach(v -> exibirVeiculo(v));
+                                duplicataDados.forEach(Programa::exibirVeiculo);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
                                 sc.nextLine();
@@ -160,61 +160,38 @@ public class Programa {
                         switch (opt2) {
                             case 1 -> {
                                 System.out.print("Digite o cpf: ");
-                                long cpf = sc.nextInt();
+                                long cpf = sc.nextLong();
                                 Pedido pedido = repositorioPedidos.procurarPedido(cpf, false);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
-                                    opt2 = 4;
                                 } else {
-                                    pedido.getVeiculoAlugado().retornar();
-                                    pagar(pedido, sc);
-                                    // Pede para a oficina um relatório de condição pós-uso do cliente
-                                    Relatorio relatorio = oficina.revisaoPosUso(pedido);
-                                    // Envia o relatório para o método estático que verifica se o dano
-                                    // gerado foi passível de multa ao cliente, retornando a multa ou
-                                    // null, caso não deva ser cobrado do mesmo
-                                    Multa multa = Multa.calcMulta(relatorio, pedido);
-                                    if (multa != null);
-                                        //pedido.getCliente().setMultas(multa);
-                                    // Falta chamar a função que pede o pagamento das dívidas
+                                    retornarVeiculos(oficina, controleFinanceiro, repositorioDebitos, pedido, sc);
                                 }
+                                opt2 = 4;
                             }
 
                             case 2 -> {
                                 System.out.print("Informe a placa do veículo: ");
                                 String placa = sc.nextLine();
-                                Debitos pedido = repositorioPedidos.procurarPedido(placa, false);
+                                Pedido pedido = repositorioPedidos.procurarPedido(placa, false);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                 } else {
-                                    pagar(pedido, sc);
+                                    retornarVeiculos(oficina, controleFinanceiro, repositorioDebitos, pedido, sc);
                                 }
                                 opt2 = 4;
                             }
-                            // Falta alterar o veículo para que conste que ele não esteja mais em locação
+
                             case 3 -> {
                                 List<Pedido> pedidos = repositorioPedidos.listarPedidos(false);
-                                if (pedidos.size() == 0) {
+                                if (pedidos.isEmpty()) {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                 } else {
-                                    // Lista os pedidos
-                                    for (int i = 1; i <= pedidos.size(); i++) {
-                                        System.out.println(pedidos.get(i-1));
-                                    }
-                                    System.out.println("""
-                                            =====================================
-                                            Digite qual pedido deseja:
-                                            """);
-                                    int opcao = sc.nextInt()-1;
-                                    if (opcao < pedidos.size() && opcao >= 0) {
-                                        pagar(pedidos.get(opcao), sc);
-                                    } else {
-                                        System.out.println("Opção inválida.\nDê \"Enter\" para seguir.");
-                                        sc.nextLine();
-                                    }
+                                    long cpf = pedidos.get(0).getCliente().getCPF();
+                                    pagarDebitos(cpf, controleFinanceiro, repositorioDebitos, sc);
                                 }
                                 opt2 = 4;
                             }
@@ -404,13 +381,43 @@ public class Programa {
         return valorFinal;
     }
 
-    public static void pagar(Debitos debito, Scanner sc) {
-        System.out.println(debito);
-        System.out.print("Digite o valor do pagamento:\nR$");
-        double pagamento = sc.nextDouble();
-        System.out.println(debito.pagar(pagamento));
-        if (!debito.isPaga()) {
-            System.out.println("Cliente ficará em dívida e não poderá alugar demais veículos.");
+    public static void retornarVeiculos(
+            Oficina oficina,
+            ControleFinanceiro controleFinanceiro,
+            RepositorioDebitos repositorioDebitos,
+            Pedido pedido,
+            Scanner sc) {
+        pedido.getVeiculoAlugado().retornar();
+        // Pede para a oficina um relatório de condição pós-uso do cliente
+        Relatorio relatorio = oficina.revisaoPosUso(pedido);
+        // Envia o relatório para o método que verifica se o dano gerado
+        // foi passível de multa ao cliente, retornando a multa ou null,
+        // caso não deva ser cobrado do mesmo
+        Double valorMulta = controleFinanceiro.calcMulta(relatorio, pedido);
+        if (valorMulta != null)
+            repositorioDebitos.salvarMulta(
+                    relatorio,
+                    pedido,
+                    valorMulta);
+        long cpf = pedido.getCliente().getCPF();
+        pagarDebitos(cpf, controleFinanceiro, repositorioDebitos, sc);
+    }
+
+    public static void pagarDebitos(
+            long cpf,
+            ControleFinanceiro controleFinanceiro,
+            AcessoRepositorioDebitos repositorioDebitos,
+            Scanner sc) {
+        List<Debitos> debitos = repositorioDebitos.debitosGeraisCliente(cpf, false);
+        if (debitos.isEmpty()) {
+            System.out.println("Não há débitos vinculados a este CPF.");
+        } else {
+            System.out.println("=====================================");
+            debitos.forEach(System.out::println);
+            System.out.println("Valor total da cobrança: " + controleFinanceiro.calcularDebitos(cpf));
+            System.out.print("Digite o valor do pagamento:\nR$");
+            double pagamento = sc.nextDouble();
+            System.out.println(controleFinanceiro.pagarPendencias(cpf, pagamento));
         }
     }
 }

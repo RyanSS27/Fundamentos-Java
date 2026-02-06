@@ -14,19 +14,6 @@ public class Multa extends Debitos {
         setNivelDano(pedido.getVeiculoAlugado().getNivelDano());
     }
 
-    public static Multa calcMulta(Relatorio relatorioCondicao, Pedido pedido) {
-        // Se o dano for < 3, a cobrança não é atribuída ao cliente
-        if (relatorioCondicao.getNivelDano() > 3 && relatorioCondicao.getNivelDano() < 10) {
-            // A cada nível de dano, 5% a mais do veículo é cobrado
-            // Exemplo: Nível 4 = 20%, Nível 9 = 45%
-            float percentualDano = relatorioCondicao.getNivelDano() * 0.05f;
-            double valor = percentualDano * pedido.veiculoAlugado.getValor();
-            return new Multa(relatorioCondicao, pedido, valor);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public String toString() {
         return """
