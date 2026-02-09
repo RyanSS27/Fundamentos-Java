@@ -3,8 +3,18 @@ package financeiro;
 import frota.Veiculo;
 
 public class Pedido extends Debitos {
+    private boolean veiculoFoiRetornado;
     public Pedido(Cliente cliente, Veiculo veiculoAlugado, double valor, String descricao) {
         super(cliente, veiculoAlugado, valor, descricao);
+        setVeiculoFoiRetornado(false);
+    }
+
+    public boolean isVeiculoFoiRetornado() {
+        return veiculoFoiRetornado;
+    }
+
+    public void setVeiculoFoiRetornado(boolean veiculoFoiRetornado) {
+        this.veiculoFoiRetornado = veiculoFoiRetornado;
     }
 
     @Override

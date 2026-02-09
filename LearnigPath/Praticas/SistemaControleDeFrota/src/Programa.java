@@ -10,7 +10,7 @@ import static oficina.Oficina.*;
 
 
 public class Programa {
-    public static void main(String[] args) {
+    public static <cpf> void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         sc.useLocale(Locale.US);
         RepositorioVeiculos repositorioVeiculos = new RepositorioVeiculos();
@@ -185,7 +185,6 @@ public class Programa {
                             }
 
                             case 3 -> {
-                                //Falta também, garantir que, após a locação, o cliente fique inápto
                                 List<Debitos> pedidos = repositorioPedidos.listarPedidos(false);
                                 if (pedidos.isEmpty()) {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
@@ -210,6 +209,107 @@ public class Programa {
                     }
                 }
                 // Implementar o pagamento de débitos.
+                case 4 -> {
+                    System.out.print("""
+                                =====================================
+                                          ALUGUEL DE CARROS
+                                =====================================
+                                [1] Listar débitos gerais (CPF)
+                                [2] Listar pedidos já retornados (CPF)
+                                [3] Listar multas (CPF)
+                                [4] Voltar
+                                =====================================
+                                Digite:""");
+                    // Fazer alguma forma de listar os pedidos
+                    // de veículos que já retornaram, listar Multas
+                    int opt2 = 0;
+                    while (opt2 != 4) {
+                        opt2 = sc.nextInt();
+                        if (opt2 == 4) {
+                            System.out.println("Retornando..");
+                        } else if (opt2 > 0 && opt2 < 5) {
+                            System.out.println("Informe o CPF do cliente (0 para cancelar):");
+                            final long CPF = sc.nextLong();
+                            if (CPF == 0) {
+                                opt2 = 4;
+                            } else {
+                                switch (opt2) {
+                                    case 1 -> {
+                                        List<Debitos> debitos = repositorioDebitos.debitosGeraisCliente(CPF, false);
+                                        if (debitos.isEmpty()) {
+                                            System.out.println("Não há débitos vinculados a este CPF.");
+                                        } else {
+                                            listarDebitos(
+                                                    debitos,
+                                                    repositorioVeiculos,
+                                                    repositorioClientes,
+                                                    repositorioDebitos,
+                                                    controleFinanceiro,
+                                                    sc
+                                            );
+                                        }
+                                    }
+                                    case 2 -> {
+                                        Debitos pedido = repositorioDebitos.procurarPedido(CPF, false);
+                                        if (pedido == null) {
+                                            System.out.println("Não há pedidos vinculados a este CPF.");
+                                        } else {
+                                            System.out.println("Pedido encontrado:\n" + pedido);
+                                            System.out.println("Deseja iniciar pagamento de débitos do cliente?" +
+                                                    "\n[1 par sim | 0 para não]");
+                                            int opt3 = sc.nextInt();
+                                            if (opt3 == 1) {
+                                                pagarDebitos(
+                                                        CPF,
+                                                        controleFinanceiro,
+                                                        repositorioDebitos,
+                                                        sc
+                                                );
+                                            } else {
+                                                // Entra na condição qualquer valor diferente de 1
+                                                System.out.println("Aperte enter para retornar:");
+                                                // Consome a quebra de linha anterior
+                                                sc.nextLine();
+                                                // Consome o "Enter" do usuário
+                                                sc.nextLine();
+                                            }
+                                        }
+                                    }
+                                    case 3 -> {
+                                        Debitos multa = repositorioDebitos.procurarMulta(CPF, false);
+                                        if (multa == null) {
+                                            System.out.println("Não há multas vinculados a este CPF.");
+                                        } else {
+                                            System.out.println("Multa encontrada:\n" + multa);
+                                            System.out.println("Deseja iniciar pagamento de débitos do cliente?" +
+                                                    "\n[1 par sim | 0 para não]");
+                                            int opt3 = sc.nextInt();
+                                            if (opt3 == 1) {
+                                                pagarDebitos(
+                                                        CPF,
+                                                        controleFinanceiro,
+                                                        repositorioDebitos,
+                                                        sc
+                                                );
+                                            } else {
+                                                // Entra na condição qualquer valor diferente de 1
+                                                System.out.println("Aperte enter para retornar:");
+                                                // Consome a quebra de linha anterior
+                                                sc.nextLine();
+                                                // Consome o "Enter" do usuário
+                                                sc.nextLine();
+                                            }
+                                        }
+                                    }
+                                }
+                                System.out.println("Retornando..");
+                                opt2 = 4;
+                            }
+                        } else {
+                            System.out.println("Valor inválido, tente novamente.");
+                        }
+                    }
+                }
                 case 5 -> System.out.println("Encerrando o programa..");
                 default -> System.out.println("Opção inválida");
             }
@@ -223,15 +323,14 @@ public class Programa {
                 - Listar veículos;
                 - Deve permitir alugar os veículos listados disponíveis;
                 - Registrar o retorno do veículo;
-                - Enviar carros para a revisão pós uso para fechar
+                - Enviar carros para a revisão pós-uso para fechar
                 a conta do cliente;
                 - Receber pagamentos;
-            2° Acesso - Gestor de frota
+            2° Acesso - Gerencial
                 - Ter acesso à quantidade total de veículos de cada Categoria
                 e os que estão disponíveis para locação.
                 - Poder verificar quantos veículos estão quebrados e listá-los
                 - Enviar esses veículos para manutenção
-            3° Acesso - Gerente
                 - Registra a chegada de gasolina
                 - Tem acesso às contas da empresa e o lucro
          */
@@ -413,7 +512,8 @@ public class Programa {
                     relatorio,
                     pedido,
                     valorMulta);
-        long cpf = pedido.getCliente().getCPF();
+        pedido.setVeiculoFoiRetornado(pedido.getVeiculoAlugado().isEmLocacao());
+        final long cpf = pedido.getCliente().getCPF();
         pagarDebitos(cpf, controleFinanceiro, repositorioDebitos, sc);
     }
 
@@ -435,7 +535,7 @@ public class Programa {
             debitos.get(0).getCliente().isAptoLocacao(controleFinanceiro);
         }
     }
-
+    // Criar uma função que liste todos os débitos do cliente
     public static void listarDebitos(List<Debitos> debitos,
                               AcessoRepositorioVeiculos repositorioVeiculos,
                               AcessoRepositorioClientes repositorioClientes,
@@ -444,7 +544,7 @@ public class Programa {
                               Scanner sc) {
         boolean opt3 = true;
         while (opt3) {
-            // Se haver veículos, ele segue o curso. Se não houver, retorna
+            // Se haver débitos, ele segue o curso. Se não houver, retorna
             if (!debitos.isEmpty()) {
                 for (int i = 1; (i - 1) < (debitos.size()); i++) {
                     Debitos debito = debitos.get(i - 1);
@@ -487,24 +587,23 @@ public class Programa {
                 int opt4 = sc.nextInt() - 1;
                 if (opt4 == debitos.size()) {
                     System.out.println("Voltando..");
-                    opt3 = false;
                 } else if (opt4 > debitos.size() || opt4 < 0) {
                     System.out.println("--- Digite um valor válido. Tente novamente. ---");
                 } else {
                     Debitos debito = debitos.get(opt4);
-                    // Mostra não só o pedido ou multa, mas todas as cobranças
+                    // Mostra não só o pedido ou multa, mas todas as cobranças,
+                    // pois a cobrança é feita pelo montante
                     pagarDebitos(
                             debito.getCliente().getCPF(),
                             (ControleFinanceiro) controleFinanceiro,
                             repositorioDebitos,
                             sc
                     );
-                    opt3 = false;
                 }
             } else {
-                System.out.println("Não há veículos desta categoria disponíveis.");
-                opt3 = false;
+                System.out.println("Não há pendências registradas.");
             }
+            opt3 = false;
         }
     }
 }

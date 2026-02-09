@@ -112,6 +112,7 @@ public class Oficina {
 
         // Chance de 1/4 de estar quebrado
         int chanceQuebra = ThreadLocalRandom.current().nextInt(1, 5);
+        chanceQuebra = 1;
         /*
             0 = não há danos
             1-3 (3/10) = danos comuns de desgaste/uso
