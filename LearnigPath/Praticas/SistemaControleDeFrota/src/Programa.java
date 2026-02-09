@@ -190,7 +190,7 @@ public class Programa {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                 } else {
-                                    listarDebitos(
+                                    selecionarDebitos(
                                             pedidos,
                                             repositorioVeiculos,
                                             repositorioClientes,
@@ -239,14 +239,25 @@ public class Programa {
                                         if (debitos.isEmpty()) {
                                             System.out.println("Não há débitos vinculados a este CPF.");
                                         } else {
-                                            listarDebitos(
-                                                    debitos,
-                                                    repositorioVeiculos,
-                                                    repositorioClientes,
-                                                    repositorioDebitos,
-                                                    controleFinanceiro,
-                                                    sc
-                                            );
+                                            listarDebitos(debitos);
+                                            System.out.println("Deseja iniciar pagamento de débitos do cliente?" +
+                                                    "\n[1 par sim | 0 para não]");
+                                            int opt3 = sc.nextInt();
+                                            if (opt3 == 1) {
+                                                pagarDebitos(
+                                                        CPF,
+                                                        controleFinanceiro,
+                                                        repositorioDebitos,
+                                                        sc
+                                                );
+                                            } else {
+                                                // Entra na condição com qualquer valor diferente de 1
+                                                System.out.println("Aperte enter para retornar");
+                                                // Consome a quebra de linha anterior
+                                                sc.nextLine();
+                                                // Consome o "Enter" do usuário
+                                                sc.nextLine();
+                                            }
                                         }
                                     }
                                     case 2 -> {
@@ -266,8 +277,8 @@ public class Programa {
                                                         sc
                                                 );
                                             } else {
-                                                // Entra na condição qualquer valor diferente de 1
-                                                System.out.println("Aperte enter para retornar:");
+                                                // Entra na condição com qualquer valor diferente de 1
+                                                System.out.println("Aperte enter para retornar");
                                                 // Consome a quebra de linha anterior
                                                 sc.nextLine();
                                                 // Consome o "Enter" do usuário
@@ -292,7 +303,7 @@ public class Programa {
                                                         sc
                                                 );
                                             } else {
-                                                // Entra na condição qualquer valor diferente de 1
+                                                // Entra na condição com qualquer valor diferente de 1
                                                 System.out.println("Aperte enter para retornar:");
                                                 // Consome a quebra de linha anterior
                                                 sc.nextLine();
@@ -374,11 +385,13 @@ public class Programa {
         veiculos.forEach(v -> exibirVeiculo(v));
     }
 
-    public static void alugarVeiculo(String categoria, AcessoRepositorioVeiculos repositorioVeiculos,
-                                     AcessoRepositorioClientes repositorioClientes,
-                                     AcessoRepositorioDebitos repositorioDebitos,
-                                     AcessoFinanceiro repositorioFinanceiro,
-                                     Scanner sc) {
+    public static void alugarVeiculo(
+            String categoria, AcessoRepositorioVeiculos repositorioVeiculos,
+            AcessoRepositorioClientes repositorioClientes,
+            AcessoRepositorioDebitos repositorioDebitos,
+            AcessoFinanceiro repositorioFinanceiro,
+            Scanner sc
+    ) {
         boolean opt3 = true;
         while (opt3) {
             List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorioVeiculos.listarVeiculos(categoria,
@@ -387,15 +400,17 @@ public class Programa {
             if (!veiculosDisponiveis.isEmpty()) {
                 for (int i = 1; (i-1) < (veiculosDisponiveis.size()); i++) {
                     System.out.println("""
-                                                    ------- ID %d -------
-                                                    Veículo: %s
-                                                    Em locação: %b
-                                                    Em condição de locação: %b
-                                                    """.formatted(
-                                                            i,
-                                                            veiculosDisponiveis.get(i-1),
-                                                            veiculosDisponiveis.get(i-1).isEmLocacao(),
-                                                            veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()));
+                                ------- ID %d -------
+                                Veículo: %s
+                                Em locação: %b
+                                Em condição de locação: %b
+                                """.formatted(
+                                        i,
+                                        veiculosDisponiveis.get(i-1),
+                                        veiculosDisponiveis.get(i-1).isEmLocacao(),
+                                        veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()
+                                )
+                    );
                 }
                 System.out.printf("[%d] Cancelar\n", veiculosDisponiveis.size() + 1);
                 System.out.println("Qual veículo deseja?");
@@ -499,7 +514,8 @@ public class Programa {
             ControleFinanceiro controleFinanceiro,
             RepositorioDebitos repositorioDebitos,
             Pedido pedido,
-            Scanner sc) {
+            Scanner sc
+    ) {
         pedido.getVeiculoAlugado().retornar();
         // Pede para a oficina um relatório de condição pós-uso do cliente
         Relatorio relatorio = oficina.revisaoPosUso(pedido);
@@ -521,7 +537,8 @@ public class Programa {
             long cpf,
             ControleFinanceiro controleFinanceiro,
             AcessoRepositorioDebitos repositorioDebitos,
-            Scanner sc) {
+            Scanner sc
+    ) {
         List<Debitos> debitos = repositorioDebitos.debitosGeraisCliente(cpf, false);
         if (debitos.isEmpty()) {
             System.out.println("Não há débitos vinculados a este CPF.");
@@ -535,30 +552,31 @@ public class Programa {
             debitos.get(0).getCliente().isAptoLocacao(controleFinanceiro);
         }
     }
-    // Criar uma função que liste todos os débitos do cliente
-    public static void listarDebitos(List<Debitos> debitos,
-                              AcessoRepositorioVeiculos repositorioVeiculos,
-                              AcessoRepositorioClientes repositorioClientes,
-                              AcessoRepositorioDebitos repositorioDebitos,
-                              AcessoFinanceiro controleFinanceiro,
-                              Scanner sc) {
+
+    public static void listarDebitos(List<Debitos> debitos) {
+        debitos.forEach(System.out::println);
+    }
+
+    public static void selecionarDebitos(
+            List<Debitos> debitos, 
+            AcessoRepositorioVeiculos repositorioVeiculos,
+            AcessoRepositorioClientes repositorioClientes,
+            AcessoRepositorioDebitos repositorioDebitos,
+            AcessoFinanceiro controleFinanceiro,
+            Scanner sc
+    ) {
+        /*
+            Recebe uma lista de débitos, para ser selecionado o débito
+            que se deseja pagar e acionar a função de pagamento passando
+            o CPF do devedor
+         */
         boolean opt3 = true;
         while (opt3) {
             // Se haver débitos, ele segue o curso. Se não houver, retorna
             if (!debitos.isEmpty()) {
                 for (int i = 1; (i - 1) < (debitos.size()); i++) {
                     Debitos debito = debitos.get(i - 1);
-                    String descricaoAuxiliar;
-                    if (debito.getClass().getSimpleName().equals("Multa")) {
-                        debito = (Multa) debito;
-                        descricaoAuxiliar = """
-                                Nível de dano: %d
-                                Descrição: %s
-                                ---------------------
-                                """.formatted(((Multa) debito).getNivelDano(), debito.getDescricao());
-                    } else {
-                        descricaoAuxiliar = "---------------------";
-                    }
+                    String descricaoAuxiliar = getDescricaoAuxiliar(debito);
                     System.out.println("""
                             ------- ID %d -------
                             Cobrança: %s
@@ -571,16 +589,16 @@ public class Programa {
                             %s
                             Valor: R$ %.2f
                             """.formatted(
-                            i,
-                            debito.getClass().getSimpleName(),
-                            debito.getCliente().getNome(),
-                            debito.getCliente().getCPF(),
-                            debito.getVeiculoAlugado().getMarca()
-                                    + debito.getVeiculoAlugado().getModelo(),
-                            debito.getVeiculoAlugado().getPlaca(),
-                            descricaoAuxiliar,
-                            debito.getValor()
-                    ));
+                                    i,
+                                    debito.getClass().getSimpleName(),
+                                    debito.getCliente().getNome(),
+                                    debito.getCliente().getCPF(),
+                                    debito.getVeiculoAlugado().getMarca() + debito.getVeiculoAlugado().getModelo(),
+                                    debito.getVeiculoAlugado().getPlaca(),
+                                    descricaoAuxiliar,
+                                    debito.getValor()
+                            )
+                    );
                 }
                 System.out.printf("[%d] Cancelar\n", debitos.size() + 1);
                 System.out.println("Qual pendência quer selecionar?");
@@ -605,5 +623,19 @@ public class Programa {
             }
             opt3 = false;
         }
+    }
+
+    private static String getDescricaoAuxiliar(Debitos debito) {
+        String descricaoAuxiliar;
+        if (debito.getClass().getSimpleName().equals("Multa")) {
+            descricaoAuxiliar = """
+                    Nível de dano: %d
+                    Descrição: %s
+                    ---------------------
+                    """.formatted(((Multa) debito).getNivelDano(), debito.getDescricao());
+        } else {
+            descricaoAuxiliar = "---------------------";
+        }
+        return descricaoAuxiliar;
     }
 }
