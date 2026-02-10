@@ -1,11 +1,11 @@
-package repositorios;
+package br.com.autogo.repositorio;
 
-import financeiro.Cliente;
+import br.com.autogo.cadastro.Cliente;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RespositorioClientes implements AcessoRepositorioClientes {
+public class RespositorioClienteImpl implements RepositorioCliente {
     private List<Cliente> clientes = new ArrayList<>();
 
     @Override
@@ -15,7 +15,7 @@ public class RespositorioClientes implements AcessoRepositorioClientes {
             clientes.add(new Cliente(nome, cpf));
             return "Cliente cadastrado com sucesso!";
         } else {
-            return "Cliente já possui cadastro: " + testeDuplicidade.toString();
+            return "Cliente já possui br.com.autogo.cadastro: " + testeDuplicidade.toString();
         }
     }
 

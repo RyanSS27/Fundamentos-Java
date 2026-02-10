@@ -1,15 +1,16 @@
-package financeiro;
+package br.com.autogo.financeiro;
 
-import frota.Veiculo;
+import br.com.autogo.cadastro.Cliente;
+import br.com.autogo.frota.VeiculoImpl;
 
-public abstract class Debitos {
-    protected Cliente cliente;
-    protected Veiculo veiculoAlugado;
-    protected double valor;
-    protected String descricao;
-    protected boolean paga;
+public abstract class Debito {
+    private Cliente cliente;
+    private VeiculoImpl veiculoAlugado;
+    private double valor;
+    private String descricao;
+    private boolean paga;
 
-    public Debitos(Cliente cliente, Veiculo veiculoAlugado, double valor, String descricao) {
+    public Debito(Cliente cliente, VeiculoImpl veiculoAlugado, double valor, String descricao) {
         this.cliente = cliente;
         this.veiculoAlugado = veiculoAlugado;
         this.valor = valor;
@@ -48,11 +49,11 @@ public abstract class Debitos {
         this.cliente = cliente;
     }
 
-    public Veiculo getVeiculoAlugado() {
+    public VeiculoImpl getVeiculoAlugado() {
         return veiculoAlugado;
     }
 
-    public void setVeiculoAlugado(Veiculo veiculoAlugado) {
+    public void setVeiculoAlugado(VeiculoImpl veiculoAlugado) {
         this.veiculoAlugado = veiculoAlugado;
     }
 

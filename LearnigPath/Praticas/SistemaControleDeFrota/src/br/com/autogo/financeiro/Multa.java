@@ -1,8 +1,8 @@
-package financeiro;
+package br.com.autogo.financeiro;
 
-import oficina.Relatorio;
+import br.com.autogo.oficina.Relatorio;
 
-public class Multa extends Debitos {
+public class Multa extends Debito {
     public static final int TAXA_PERDA_PATRIMONIO = 15;
     // Serve para salvar o nível de dano que o carro tinha no momento,
     // pois, como a referência sempre apontará para o objeto ele pode
@@ -31,11 +31,11 @@ public class Multa extends Debitos {
                 Valor: R$%.2f
                 ---------------------
                 """.formatted(
-                this.cliente.getNome(),
-                this.cliente.getCPF(),
-                this.veiculoAlugado.getMarca(),
-                this.veiculoAlugado.getModelo(),
-                this.veiculoAlugado.getPlaca(),
+                this.getCliente().getNome(),
+                this.getCliente().getCPF(),
+                this.getVeiculoAlugado().getMarca(),
+                this.getVeiculoAlugado().getModelo(),
+                this.getVeiculoAlugado().getPlaca(),
                 getNivelDano(),
                 getDescricao(),
                 getValor());

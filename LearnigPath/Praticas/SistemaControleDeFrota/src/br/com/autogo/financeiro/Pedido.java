@@ -1,10 +1,11 @@
-package financeiro;
+package br.com.autogo.financeiro;
 
-import frota.Veiculo;
+import br.com.autogo.cadastro.Cliente;
+import br.com.autogo.frota.VeiculoImpl;
 
-public class Pedido extends Debitos {
+public class Pedido extends Debito {
     private boolean veiculoFoiRetornado;
-    public Pedido(Cliente cliente, Veiculo veiculoAlugado, double valor, String descricao) {
+    public Pedido(Cliente cliente, VeiculoImpl veiculoAlugado, double valor, String descricao) {
         super(cliente, veiculoAlugado, valor, descricao);
         setVeiculoFoiRetornado(false);
     }
@@ -33,12 +34,12 @@ public class Pedido extends Debitos {
                 Valor: R$%.2f
                 ---------------------
                 """.formatted(
-                        this.cliente.getNome(),
-                        this.cliente.getCPF(),
-                        this.veiculoAlugado.getMarca(),
-                        this.veiculoAlugado.getModelo(),
-                        this.veiculoAlugado.getPlaca(),
-                        this.descricao,
-                        this.valor);
+                        this.getCliente().getNome(),
+                        this.getCliente().getCPF(),
+                        this.getVeiculoAlugado().getMarca(),
+                        this.getVeiculoAlugado().getModelo(),
+                        this.getVeiculoAlugado().getPlaca(),
+                        this.getDescricao(),
+                        this.getValor());
     }
 }

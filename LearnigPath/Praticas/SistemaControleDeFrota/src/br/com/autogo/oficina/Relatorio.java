@@ -1,4 +1,4 @@
-package oficina;
+package br.com.autogo.oficina;
 
 public abstract class Relatorio {
     private String placa;

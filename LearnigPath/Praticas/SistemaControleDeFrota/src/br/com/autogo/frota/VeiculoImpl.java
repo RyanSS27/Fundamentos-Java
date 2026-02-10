@@ -1,16 +1,11 @@
-package frota;
+package br.com.autogo.frota;
 
-import oficina.Oficina;
-import financeiro.Cliente;
+import br.com.autogo.oficina.Oficina;
+import br.com.autogo.cadastro.Cliente;
 
 import java.lang.Comparable;
 
-public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
-    private static int qtdeVeiculosMembrosDaFrota;
-    private static int qtdeVeiculosCategoriaA;
-    private static int qtdeVeiculosCategoriaB;
-    private static int qtdeVeiculosCategoriaC;
-
+public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
     // Atributos
     private String placa;
     private String marca;
@@ -38,28 +33,17 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     private float quilometragem;
     private Cliente locatario;
 
-    public Veiculo(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes, float valor) {
-        qtdeVeiculosMembrosDaFrota++;
-        categoria = categoria.toUpperCase();
-        switch (categoria) {
-            case "A" -> qtdeVeiculosCategoriaA++;
-            case "B" -> qtdeVeiculosCategoriaB++;
-            case "C" -> qtdeVeiculosCategoriaC++;
-            default -> {
-                System.out.println("Erro. Categoria inválida.");
-                return;
-            }
-        }
-        this.placa = placa.toUpperCase();
-        this.modelo = modelo;
-        this.marca = marca;
-        this.categoria = categoria;
-        this.qtdeMaxOcupantes = qtdeMaxOcupantes;
-        this.capacidadeMaximaTanque = capacidadeMaximaTanque;
-        this.quilometragem = quilometragem;
-        this.emLocacao = false;
-        this.locatario = null;
-        this.valor = valor;
+    public VeiculoImpl(String marca, String modelo, String placa, float quilometragem, float capacidadeMaximaTanque, String categoria, int qtdeMaxOcupantes, float valor) {
+        this.setCategoria(categoria);
+        this.setPlaca(placa);
+        this.setModelo(modelo);
+        this.setMarca(marca);
+        this.setQtdeMaxOcupantes(qtdeMaxOcupantes);
+        this.setCapacidadeMaximaTanque(capacidadeMaximaTanque);
+        this.setQuilometragem(quilometragem);
+        this.setEmLocacao(false);
+        this.setLocatario(null);
+        this.setValor(valor);
     }
 
     protected void rodar(float quilometros) {
@@ -99,16 +83,14 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     }
 
     @Override
-    public boolean serAlugado(Cliente locatario) {
+    public void serAlugado(Cliente locatario) {
         if (isEmCondicaoDeUso()) {
             setEmLocacao(true);
             setLocatario(locatario);
             this.setLimpo(false);
             setEmCondicaoDeUso();
-            return true;
         } else {
             System.out.println("O veículo não pode ser alugado.");
-            return false;
         }
     }
 
@@ -120,7 +102,7 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     }
 
     @Override
-    public int compareTo(Veiculo veiculoComparado) {
+    public int compareTo(VeiculoImpl veiculoComparado) {
         return this.getModelo().compareTo(veiculoComparado.getModelo());
     }
 
@@ -225,7 +207,8 @@ public class Veiculo implements InterfaceVeiculo, Comparable<Veiculo> {
     }
 
     public void setEmCondicaoDeUso() {
-        this.emCondicaoDeUso = (getTanquePorcentagem() >= (Oficina.CAPACIDADE_MINIMA_GASOLINA_LOCACAO * 10)) && !this.emManutencao && this.limpo && !this.quebrado && !emLocacao;
+        this.emCondicaoDeUso = (getTanquePorcentagem() >= (Oficina.CAPACIDADE_MINIMA_GASOLINA_LOCACAO * 10))
+                && !this.emManutencao && this.limpo && !this.quebrado && !emLocacao;
     }
 
     public float getQuilometragem() {

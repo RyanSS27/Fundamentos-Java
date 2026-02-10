@@ -1,9 +1,9 @@
-package oficina;
+package br.com.autogo.oficina;
 // * Deve realizar o checkup da situação do carro para locação
 // * Deve consertá-lo para as condições mínimas de locação nome: preparação
 
-import frota.Veiculo;
-import financeiro.Pedido;
+import br.com.autogo.frota.VeiculoImpl;
+import br.com.autogo.financeiro.Pedido;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,7 +21,7 @@ public class Oficina {
     }
 
     // Realiza o checkup da situação do carro para locação
-    public static String checkup(Veiculo automovel) {
+    public static String checkup(VeiculoImpl automovel) {
         /*
             Descrição da função:
             Realiza um checkup minucioso das condições de uso do veículo
@@ -71,10 +71,10 @@ public class Oficina {
             //Testa se continua em manutenção
             if (automovel.isEmManutencao()) {
                 if (testeQualidade > 0) {
-                    obs += ", está na oficina";
+                    obs += ", está na br.com.autogo.oficina";
                     recomendacoes += ";\n- Espere o termino da manutenção para solicitar o envio do carro ao pátio";
                 } else {
-                    obs += " está na oficina";
+                    obs += " está na br.com.autogo.oficina";
                     recomendacoes += "\n- Solicitar o envio do carro ao pátio através da preparação.";
                 }
             }
@@ -110,16 +110,16 @@ public class Oficina {
             problema ou não e, se sim, retorna a gravidade.
          */
 
-        // Chance de 1/4 de estar quebrado
-        int chanceQuebra = ThreadLocalRandom.current().nextInt(1, 5);
-        chanceQuebra = 1;
+        // Chance de 2/5 de estar quebrado
+        int chanceQuebra = ThreadLocalRandom.current().nextInt(1, 6);
+
         /*
             0 = não há danos
             1-3 (3/10) = danos comuns de desgaste/uso
             4-9 (6/10) = danos por má conduta
             10 (1/10) = pt no carro
         */
-        if (chanceQuebra == 1) {
+        if (3 < chanceQuebra) {
             int nivelDano = ThreadLocalRandom.current().nextInt(1, 11);
             pedido.getVeiculoAlugado().setNivelDano(nivelDano);
             String possivelCausa;
@@ -153,7 +153,7 @@ public class Oficina {
     }
 
     // Realiza o conserto do veículo
-    public static Relatorio conserto(Veiculo automovel) {
+    public static Relatorio conserto(VeiculoImpl automovel) {
         if (automovel.getNivelDano() == 10) {
             String descricao = "PT no carro.";
             String possivelCausa = "Podemos dizer que ele APARENTEMENTE perdeu a briga com o poste.";
@@ -178,7 +178,7 @@ public class Oficina {
     }
 
     // Realiza a preparação completa do veículo para locação
-    public static String preparacao(Veiculo automovel) {
+    public static String preparacao(VeiculoImpl automovel) {
         if (automovel.getNivelDano() == 10) {
             return """
                     ===========================================================
@@ -206,17 +206,17 @@ public class Oficina {
                 Relatório:
                 %s
                 
-                Obs: contate a oficina para mais detalhes do carro.
+                Obs: contate a br.com.autogo.oficina para mais detalhes do carro.
                 """.formatted(notaDeCondicao, relatorioFinal);
     }
 
     // Abastece conforme a quantidade desejada de litros
-    public static String abastecer(Veiculo automovel, float litrosDesejados) {
+    public static String abastecer(VeiculoImpl automovel, float litrosDesejados) {
         if (reservaGasolina <= 0) {
-            return "Erro: Reserva da oficina vazia.";
+            return "Erro: Reserva da br.com.autogo.oficina vazia.";
         }
 
-        // Verifica o que a oficina pode fornecer
+        // Verifica o que a br.com.autogo.oficina pode fornecer
         float disponivelParaUso = Math.min(litrosDesejados, reservaGasolina);
 
         // O veículo processa quanto desses litros cabem no tanque
@@ -247,7 +247,7 @@ public class Oficina {
             if(automovel.getTanquePorcentagem() == 100) {
                 notaControle += "pois excedia a capacidade máxima do tanque.";
             } else {
-                notaControle += "pois não há combustível suficiente na reserva da oficina.";
+                notaControle += "pois não há combustível suficiente na reserva da br.com.autogo.oficina.";
             }
         }
 
@@ -255,7 +255,7 @@ public class Oficina {
     }
 
     // Enche o tanque ou preenche o mínimo de combustível para locação
-    public static String abastecer(Veiculo automovel, String minOuMax) {
+    public static String abastecer(VeiculoImpl automovel, String minOuMax) {
         if ("min".equalsIgnoreCase(minOuMax)) {
             float nivelMinimo = automovel.getCapacidadeMaximaTanque() / 3.0f;
 

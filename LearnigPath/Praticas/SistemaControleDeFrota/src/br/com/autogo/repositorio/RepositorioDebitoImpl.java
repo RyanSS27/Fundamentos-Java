@@ -1,18 +1,18 @@
-package repositorios;
+package br.com.autogo.repositorio;
 
-import financeiro.Cliente;
-import financeiro.Debitos;
-import financeiro.Multa;
-import financeiro.Pedido;
-import frota.Veiculo;
-import oficina.Relatorio;
+import br.com.autogo.cadastro.Cliente;
+import br.com.autogo.financeiro.Debito;
+import br.com.autogo.financeiro.Multa;
+import br.com.autogo.financeiro.Pedido;
+import br.com.autogo.frota.VeiculoImpl;
+import br.com.autogo.oficina.Relatorio;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RepositorioDebitos implements AcessoRepositorioDebitos {
+public class RepositorioDebitoImpl implements RepositorioDebito {
     private static List<Multa> multas = new ArrayList<>();
     private static List<Pedido> pedidos = new ArrayList<>();
 
@@ -23,12 +23,12 @@ public class RepositorioDebitos implements AcessoRepositorioDebitos {
     }
 
     @Override
-    public void salvarPedido(Cliente cliente, Veiculo veiculoAlugado, double valor, String descricao) {
+    public void salvarPedido(Cliente cliente, VeiculoImpl veiculoAlugado, double valor, String descricao) {
         pedidos.add(new Pedido(cliente, veiculoAlugado, valor, descricao));
     }
 
     @Override
-    public List<Debitos> listarPedidos(boolean pago) {
+    public List<Debito> listarPedidos(boolean pago) {
         return new ArrayList<>(pedidos.stream().filter(x -> x.isPaga() == pago).collect(Collectors.toList()));
     }
 
@@ -59,8 +59,8 @@ public class RepositorioDebitos implements AcessoRepositorioDebitos {
     }
 
     @Override
-    public List<Debitos> debitosGeraisCliente(long cpf, boolean pago) {
-        List<Debitos> debitosGerais = Stream.concat(multas.stream(), pedidos.stream())
+    public List<Debito> debitosGeraisCliente(long cpf, boolean pago) {
+        List<Debito> debitosGerais = Stream.concat(multas.stream(), pedidos.stream())
                 .filter(x -> x.getCliente().getCPF() == cpf && x.isPaga() == pago)
                 .toList();
         // toList Faz com que a lista seja imutável

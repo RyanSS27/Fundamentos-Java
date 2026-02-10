@@ -1,4 +1,4 @@
-package oficina;
+package br.com.autogo.oficina;
 
 public class RelatorioConserto extends Relatorio {
     private float custoReparo;

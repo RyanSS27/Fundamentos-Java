@@ -1,31 +1,34 @@
-import financeiro.*;
-import frota.Veiculo;
-import oficina.Oficina;
-import oficina.Relatorio;
-import repositorios.*;
+package br.com.autogo;
+
+import br.com.autogo.cadastro.Cliente;
+import br.com.autogo.financeiro.*;
+import br.com.autogo.frota.VeiculoImpl;
+import br.com.autogo.oficina.Oficina;
+import br.com.autogo.oficina.Relatorio;
+import br.com.autogo.repositorio.*;
 
 import java.util.*;
 
-import static oficina.Oficina.*;
+import static br.com.autogo.oficina.Oficina.*;
 
 
 public class Programa {
     public static <cpf> void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         sc.useLocale(Locale.US);
-        RepositorioVeiculos repositorioVeiculos = new RepositorioVeiculos();
+        RepositorioVeiculoImpl repositorioVeiculos = new RepositorioVeiculoImpl();
         carregarFrota(repositorioVeiculos);
-        RespositorioClientes repositorioClientes = new RespositorioClientes();
-        RepositorioDebitos repositorioDebitos = new RepositorioDebitos();
-        ControleFinanceiro controleFinanceiro = new ControleFinanceiro(repositorioDebitos);
+        RespositorioClienteImpl repositorioClientes = new RespositorioClienteImpl();
+        RepositorioDebitoImpl repositorioDebitos = new RepositorioDebitoImpl();
+        ServicoFinanceiroImpl servicoFinanceiro = new ServicoFinanceiroImpl(repositorioDebitos);
 
-        List<Veiculo> frotaParaConcerto = new ArrayList<>(repositorioVeiculos.listarVeiculos());
+        List<VeiculoImpl> frotaParaConcerto = new ArrayList<>(repositorioVeiculos.listarVeiculos());
         Oficina oficina = new Oficina();
-        for (Veiculo vrumVrum : frotaParaConcerto) {
+        for (VeiculoImpl vrumVrum : frotaParaConcerto) {
             System.out.println(preparacao(vrumVrum));
         }
 
-        RepositorioDebitos repositorioPedidos = new RepositorioDebitos();
+        RepositorioDebitoImpl repositorioPedidos = new RepositorioDebitoImpl();
 
         System.out.println(checkup(frotaParaConcerto.get(0)));
         int opt = 0;
@@ -59,7 +62,7 @@ public class Programa {
                         opt2 = sc.nextInt();
                         switch (opt2) {
                             case 1 -> {
-                                List<Veiculo> duplicataDados = new ArrayList<>(repositorioVeiculos.listarVeiculos());
+                                List<VeiculoImpl> duplicataDados = new ArrayList<>(repositorioVeiculos.listarVeiculos());
                                 duplicataDados.forEach(Programa::exibirVeiculo);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -70,7 +73,7 @@ public class Programa {
                             }
 
                             case 2 -> {
-                                List<Veiculo> categoriaA = new ArrayList<>(repositorioVeiculos.listarVeiculos("A"));
+                                List<VeiculoImpl> categoriaA = new ArrayList<>(repositorioVeiculos.listarVeiculos("A"));
                                 listarVeiculos(categoriaA);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -81,7 +84,7 @@ public class Programa {
                             }
 
                             case 3 -> {
-                                List<Veiculo> categoriaB = new ArrayList<>(repositorioVeiculos.listarVeiculos("B"));
+                                List<VeiculoImpl> categoriaB = new ArrayList<>(repositorioVeiculos.listarVeiculos("B"));
                                 listarVeiculos(categoriaB);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -92,7 +95,7 @@ public class Programa {
                             }
 
                             case 4 -> {
-                                List<Veiculo> categoriaC = new ArrayList<>(repositorioVeiculos.listarVeiculos("C"));
+                                List<VeiculoImpl> categoriaC = new ArrayList<>(repositorioVeiculos.listarVeiculos("C"));
                                 listarVeiculos(categoriaC);
                                 System.out.println("Pressione qualquer tecla para voltar.");
                                 // Consome a quebra de linha do buffer
@@ -125,17 +128,17 @@ public class Programa {
                         switch (opt2) {
                             case 1 -> {
                                 alugarVeiculo("A", repositorioVeiculos, repositorioClientes,
-                                        repositorioDebitos, controleFinanceiro, sc);
+                                        repositorioDebitos, servicoFinanceiro, sc);
                             }
 
                             case 2 -> {
                                 alugarVeiculo("B", repositorioVeiculos, repositorioClientes,
-                                        repositorioDebitos, controleFinanceiro, sc);
+                                        repositorioDebitos, servicoFinanceiro, sc);
                             }
 
                             case 3 -> {
                                 alugarVeiculo("C", repositorioVeiculos, repositorioClientes,
-                                        repositorioDebitos, controleFinanceiro, sc);
+                                        repositorioDebitos, servicoFinanceiro, sc);
                             }
 
                             case 4 -> System.out.println("Cancelando..");
@@ -166,7 +169,7 @@ public class Programa {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                 } else {
-                                    retornarVeiculos(oficina, controleFinanceiro, repositorioDebitos, pedido, sc);
+                                    retornarVeiculos(oficina, servicoFinanceiro, repositorioDebitos, pedido, sc);
                                 }
                                 opt2 = 4;
                             }
@@ -179,13 +182,13 @@ public class Programa {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
                                 } else {
-                                    retornarVeiculos(oficina, controleFinanceiro, repositorioDebitos, pedido, sc);
+                                    retornarVeiculos(oficina, servicoFinanceiro, repositorioDebitos, pedido, sc);
                                 }
                                 opt2 = 4;
                             }
 
                             case 3 -> {
-                                List<Debitos> pedidos = repositorioPedidos.listarPedidos(false);
+                                List<Debito> pedidos = repositorioPedidos.listarPedidos(false);
                                 if (pedidos.isEmpty()) {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
@@ -195,7 +198,7 @@ public class Programa {
                                             repositorioVeiculos,
                                             repositorioClientes,
                                             repositorioDebitos,
-                                            controleFinanceiro,
+                                            servicoFinanceiro,
                                             sc
                                     );
                                 }
@@ -235,7 +238,7 @@ public class Programa {
                             } else {
                                 switch (opt2) {
                                     case 1 -> {
-                                        List<Debitos> debitos = repositorioDebitos.debitosGeraisCliente(CPF, false);
+                                        List<Debito> debitos = repositorioDebitos.debitosGeraisCliente(CPF, false);
                                         if (debitos.isEmpty()) {
                                             System.out.println("Não há débitos vinculados a este CPF.");
                                         } else {
@@ -246,7 +249,7 @@ public class Programa {
                                             if (opt3 == 1) {
                                                 pagarDebitos(
                                                         CPF,
-                                                        controleFinanceiro,
+                                                        servicoFinanceiro,
                                                         repositorioDebitos,
                                                         sc
                                                 );
@@ -261,7 +264,7 @@ public class Programa {
                                         }
                                     }
                                     case 2 -> {
-                                        Debitos pedido = repositorioDebitos.procurarPedido(CPF, false);
+                                        Debito pedido = repositorioDebitos.procurarPedido(CPF, false);
                                         if (pedido == null) {
                                             System.out.println("Não há pedidos vinculados a este CPF.");
                                         } else {
@@ -272,7 +275,7 @@ public class Programa {
                                             if (opt3 == 1) {
                                                 pagarDebitos(
                                                         CPF,
-                                                        controleFinanceiro,
+                                                        servicoFinanceiro,
                                                         repositorioDebitos,
                                                         sc
                                                 );
@@ -287,7 +290,7 @@ public class Programa {
                                         }
                                     }
                                     case 3 -> {
-                                        Debitos multa = repositorioDebitos.procurarMulta(CPF, false);
+                                        Debito multa = repositorioDebitos.procurarMulta(CPF, false);
                                         if (multa == null) {
                                             System.out.println("Não há multas vinculados a este CPF.");
                                         } else {
@@ -298,7 +301,7 @@ public class Programa {
                                             if (opt3 == 1) {
                                                 pagarDebitos(
                                                         CPF,
-                                                        controleFinanceiro,
+                                                        servicoFinanceiro,
                                                         repositorioDebitos,
                                                         sc
                                                 );
@@ -349,7 +352,7 @@ public class Programa {
         sc.close();
     }
 
-    public static void carregarFrota(RepositorioVeiculos repositorioVeiculos) {
+    public static void carregarFrota(RepositorioVeiculoImpl repositorioVeiculos) {
         // --- 6 Motos (Categoria A) ---
         repositorioVeiculos.salvarVeiculo("Honda", "CB 500", "MOT-1001", 1500.5f, 17.0f, "A", 2, 35000.0f);
         repositorioVeiculos.salvarVeiculo("Yamaha", "Fazer 250", "MOT-1002", 500.0f, 14.0f, "A", 2, 22000.0f);
@@ -372,7 +375,7 @@ public class Programa {
         repositorioVeiculos.salvarVeiculo("Ford", "Transit", "VAN-3003", 5400.9f, 80.0f, "C", 2, 155000.0f);
         repositorioVeiculos.salvarVeiculo("Iveco", "Daily", "VAN-3004", 89000.2f, 90.0f, "C", 2, 170000.0f);
     }
-    public static void exibirVeiculo(Veiculo v) {
+    public static void exibirVeiculo(VeiculoImpl v) {
         System.out.printf("""
                             -------------
                             Veículo: %s
@@ -381,35 +384,39 @@ public class Programa {
                         """.formatted(v, v.isEmLocacao(), v.isEmCondicaoDeUso()));
     }
 
-    public static void listarVeiculos(List<Veiculo> veiculos) {
+    public static void listarVeiculos(List<VeiculoImpl> veiculos) {
         veiculos.forEach(v -> exibirVeiculo(v));
     }
 
     public static void alugarVeiculo(
-            String categoria, AcessoRepositorioVeiculos repositorioVeiculos,
-            AcessoRepositorioClientes repositorioClientes,
-            AcessoRepositorioDebitos repositorioDebitos,
-            AcessoFinanceiro repositorioFinanceiro,
+            String categoria, RepositorioVeiculo repositorioVeiculos,
+            RepositorioCliente repositorioClientes,
+            RepositorioDebito repositorioDebitos,
+            ServicoFinanceiro repositorioFinanceiro,
             Scanner sc
     ) {
         boolean opt3 = true;
         while (opt3) {
-            List<Veiculo> veiculosDisponiveis = new ArrayList<>(repositorioVeiculos.listarVeiculos(categoria,
-                    true));
+            List<VeiculoImpl> veiculosDisponiveis = new ArrayList<>(
+                    repositorioVeiculos.listarVeiculos(categoria,
+                    true
+                    )
+            );
             // Se haver veículos, ele segue o curso. Se não houver, retorna
             if (!veiculosDisponiveis.isEmpty()) {
                 for (int i = 1; (i-1) < (veiculosDisponiveis.size()); i++) {
-                    System.out.println("""
-                                ------- ID %d -------
-                                Veículo: %s
-                                Em locação: %b
-                                Em condição de locação: %b
-                                """.formatted(
-                                        i,
-                                        veiculosDisponiveis.get(i-1),
-                                        veiculosDisponiveis.get(i-1).isEmLocacao(),
-                                        veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()
-                                )
+                    System.out.printf(
+                            """
+                            ------- ID %d -------
+                            Veículo: %s
+                            Em locação: %b
+                            Em condição de locação: %b
+                            %n
+                            """,
+                            i,
+                            veiculosDisponiveis.get(i-1),
+                            veiculosDisponiveis.get(i-1).isEmLocacao(),
+                            veiculosDisponiveis.get(i-1).isEmCondicaoDeUso()
                     );
                 }
                 System.out.printf("[%d] Cancelar\n", veiculosDisponiveis.size() + 1);
@@ -421,7 +428,7 @@ public class Programa {
                 } else if (opt4 > veiculosDisponiveis.size() || opt4 < 0) {
                     System.out.println("--- Digite um valor válido. Tente novamente. ---");
                 } else {
-                    //Inserir a lógica de cadastro/verificação do cliente
+                    //Inserir a lógica de br.com.autogo.cadastro/verificação do cliente
                     System.out.println("Digite o CPF do cliente (ou \"0\" para cancelar):");
                     long cpf = sc.nextLong();
                     if (cpf == 0) {
@@ -483,7 +490,7 @@ public class Programa {
         }
     }
 
-    public static double gerarValorLocacao(Veiculo veiculo, int diasLocacao) {
+    public static double gerarValorLocacao(VeiculoImpl veiculo, int diasLocacao) {
         // A lógica de negócio desta função foi gerada por IA, já que o foco não era este
         // 1. Definimos uma diária base proporcional ao valor de mercado do veículo
         // Exemplo: 0.4% do valor do veículo por dia
@@ -511,18 +518,18 @@ public class Programa {
 
     public static void retornarVeiculos(
             Oficina oficina,
-            ControleFinanceiro controleFinanceiro,
-            RepositorioDebitos repositorioDebitos,
+            ServicoFinanceiroImpl servicoFinanceiro,
+            RepositorioDebitoImpl repositorioDebitos,
             Pedido pedido,
             Scanner sc
     ) {
         pedido.getVeiculoAlugado().retornar();
-        // Pede para a oficina um relatório de condição pós-uso do cliente
+        // Pede para a br.com.autogo.oficina um relatório de condição pós-uso do cliente
         Relatorio relatorio = oficina.revisaoPosUso(pedido);
         // Envia o relatório para o método que verifica se o dano gerado
         // foi passível de multa ao cliente, retornando a multa ou null,
         // caso não deva ser cobrado do mesmo
-        Double valorMulta = controleFinanceiro.calcMulta(relatorio, pedido);
+        Double valorMulta = servicoFinanceiro.calcMulta(relatorio, pedido);
         if (valorMulta != null)
             repositorioDebitos.salvarMulta(
                     relatorio,
@@ -530,39 +537,39 @@ public class Programa {
                     valorMulta);
         pedido.setVeiculoFoiRetornado(pedido.getVeiculoAlugado().isEmLocacao());
         final long cpf = pedido.getCliente().getCPF();
-        pagarDebitos(cpf, controleFinanceiro, repositorioDebitos, sc);
+        pagarDebitos(cpf, servicoFinanceiro, repositorioDebitos, sc);
     }
 
     public static void pagarDebitos(
             long cpf,
-            ControleFinanceiro controleFinanceiro,
-            AcessoRepositorioDebitos repositorioDebitos,
+            ServicoFinanceiroImpl servicoFinanceiro,
+            RepositorioDebito repositorioDebitos,
             Scanner sc
     ) {
-        List<Debitos> debitos = repositorioDebitos.debitosGeraisCliente(cpf, false);
+        List<Debito> debitos = repositorioDebitos.debitosGeraisCliente(cpf, false);
         if (debitos.isEmpty()) {
             System.out.println("Não há débitos vinculados a este CPF.");
         } else {
             System.out.println("=====================================");
             debitos.forEach(System.out::println);
-            System.out.println("Valor total da cobrança: " + controleFinanceiro.calcularDebitos(cpf));
+            System.out.println("Valor total da cobrança: " + servicoFinanceiro.calcularDebitos(cpf));
             System.out.print("Digite o valor do pagamento:\nR$");
             double pagamento = sc.nextDouble();
-            System.out.println(controleFinanceiro.pagarPendencias(cpf, pagamento));
-            debitos.get(0).getCliente().isAptoLocacao(controleFinanceiro);
+            System.out.println(servicoFinanceiro.pagarPendencias(cpf, pagamento));
+            debitos.get(0).getCliente().isAptoLocacao(servicoFinanceiro);
         }
     }
 
-    public static void listarDebitos(List<Debitos> debitos) {
+    public static void listarDebitos(List<Debito> debitos) {
         debitos.forEach(System.out::println);
     }
 
     public static void selecionarDebitos(
-            List<Debitos> debitos, 
-            AcessoRepositorioVeiculos repositorioVeiculos,
-            AcessoRepositorioClientes repositorioClientes,
-            AcessoRepositorioDebitos repositorioDebitos,
-            AcessoFinanceiro controleFinanceiro,
+            List<Debito> debitos,
+            RepositorioVeiculo repositorioVeiculos,
+            RepositorioCliente repositorioClientes,
+            RepositorioDebito repositorioDebitos,
+            ServicoFinanceiro controleFinanceiro,
             Scanner sc
     ) {
         /*
@@ -575,7 +582,7 @@ public class Programa {
             // Se haver débitos, ele segue o curso. Se não houver, retorna
             if (!debitos.isEmpty()) {
                 for (int i = 1; (i - 1) < (debitos.size()); i++) {
-                    Debitos debito = debitos.get(i - 1);
+                    Debito debito = debitos.get(i - 1);
                     String descricaoAuxiliar = getDescricaoAuxiliar(debito);
                     System.out.println("""
                             ------- ID %d -------
@@ -608,12 +615,12 @@ public class Programa {
                 } else if (opt4 > debitos.size() || opt4 < 0) {
                     System.out.println("--- Digite um valor válido. Tente novamente. ---");
                 } else {
-                    Debitos debito = debitos.get(opt4);
+                    Debito debito = debitos.get(opt4);
                     // Mostra não só o pedido ou multa, mas todas as cobranças,
                     // pois a cobrança é feita pelo montante
                     pagarDebitos(
                             debito.getCliente().getCPF(),
-                            (ControleFinanceiro) controleFinanceiro,
+                            (ServicoFinanceiroImpl) controleFinanceiro,
                             repositorioDebitos,
                             sc
                     );
@@ -625,7 +632,7 @@ public class Programa {
         }
     }
 
-    private static String getDescricaoAuxiliar(Debitos debito) {
+    private static String getDescricaoAuxiliar(Debito debito) {
         String descricaoAuxiliar;
         if (debito.getClass().getSimpleName().equals("Multa")) {
             descricaoAuxiliar = """

@@ -1,32 +1,31 @@
-package financeiro;
+package br.com.autogo.financeiro;
 
-import oficina.Relatorio;
-import oficina.RelatorioCondicao;
-import repositorios.RepositorioDebitos;
+import br.com.autogo.oficina.Relatorio;
+import br.com.autogo.repositorio.RepositorioDebitoImpl;
 
 import java.util.List;
 
-public class ControleFinanceiro implements AcessoFinanceiro {
-    RepositorioDebitos repositorioDebitos;
+public class ServicoFinanceiroImpl implements ServicoFinanceiro {
+    RepositorioDebitoImpl repositorioDebitos;
 
-    public ControleFinanceiro(RepositorioDebitos repositorio) {
+    public ServicoFinanceiroImpl(RepositorioDebitoImpl repositorio) {
       repositorioDebitos = repositorio;
     }
 
     @Override
     public boolean isFinanceiramenteElegivel(long cpf) {
-        List<Debitos> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
+        List<Debito> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
         // Se forem retornadas quaisquer cobranças relacionadas ao cpf não pagas, ele é inelegível
         return pendencias.isEmpty();
     }
 
     @Override
     public double calcularDebitos(long cpf) {
-        List<Debitos> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
+        List<Debito> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
         if(pendencias.isEmpty()) return 0.0;
 
         double dividaTotal = 0.0;
-        for(Debitos p : pendencias) {
+        for(Debito p : pendencias) {
             dividaTotal += p.getValor();
         }
 
@@ -38,14 +37,14 @@ public class ControleFinanceiro implements AcessoFinanceiro {
         // Retorna erro
         if (pagamento <= 0) return "Valor inválido";
 
-        List<Debitos> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
+        List<Debito> pendencias = repositorioDebitos.debitosGeraisCliente(cpf, false);
         // Retorna 0 caso não haja pendências
         if(pendencias.isEmpty()) return "Não há pendências vinculadas a esse CPF.";
 
         pagamento = tentarPagarDebitos(pendencias, pagamento);
 
         double dividaAtual = 0.0;
-        for(Debitos p : pendencias) {
+        for(Debito p : pendencias) {
             if (!p.isPaga()) dividaAtual += p.getValor();
         }
         if (dividaAtual == 0.0) {
@@ -56,8 +55,8 @@ public class ControleFinanceiro implements AcessoFinanceiro {
         }
     }
 
-    private double tentarPagarDebitos(List<Debitos> pendencias, double pagamento) {
-        for (Debitos p : pendencias) {
+    private double tentarPagarDebitos(List<Debito> pendencias, double pagamento) {
+        for (Debito p : pendencias) {
             // Interrompe o loop caso o saldo acabe
             if (pagamento <= 0) break;
 
@@ -84,7 +83,7 @@ public class ControleFinanceiro implements AcessoFinanceiro {
             // A cada nível de dano, 5% a mais do veículo é cobrado
             // Exemplo: Nível 4 = 20%, Nível 9 = 45%
             double percentualDano = relatorioCondicao.getNivelDano() * 0.05f;
-            return percentualDano * pedido.veiculoAlugado.getValor();
+            return percentualDano * pedido.getVeiculoAlugado().getValor();
         } else {
             return null;
         }

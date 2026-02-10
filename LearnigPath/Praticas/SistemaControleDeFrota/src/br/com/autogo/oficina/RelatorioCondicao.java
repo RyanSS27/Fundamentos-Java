@@ -1,4 +1,4 @@
-package oficina;
+package br.com.autogo.oficina;
 
 public class RelatorioCondicao extends Relatorio {
     public RelatorioCondicao(String placa, String possivelCausa, String descricao, int nivelDano) {
@@ -13,7 +13,7 @@ public class RelatorioCondicao extends Relatorio {
                 -----------------------------
                 Veículo placa: %s
                 Nível dano: %d
-                Descrição: 
+                Descrição:
                 %s
                 Possível causa:
                 %s

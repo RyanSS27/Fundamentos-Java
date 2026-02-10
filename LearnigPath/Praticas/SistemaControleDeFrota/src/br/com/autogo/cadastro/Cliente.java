@@ -1,9 +1,6 @@
-package financeiro;
+package br.com.autogo.cadastro;
 
-import repositorios.AcessoRepositorioDebitos;
-
-import java.util.ArrayList;
-import java.util.List;
+import br.com.autogo.financeiro.ServicoFinanceiro;
 
 // deve receber também multas de trânsito e multa por ferrar com o carro ao fechar a conta
 public class Cliente {
@@ -32,12 +29,12 @@ public class Cliente {
         return CPF;
     }
 
-    public boolean isAptoLocacao(AcessoFinanceiro controle) {
+    public boolean isAptoLocacao(ServicoFinanceiro controle) {
         atualizarDadosFinanceiros(controle);
         return aptoLocacao;
     }
 
-    public void atualizarDadosFinanceiros(AcessoFinanceiro controle) {
+    public void atualizarDadosFinanceiros(ServicoFinanceiro controle) {
             aptoLocacao = controle.isFinanceiramenteElegivel(getCPF());
             if (!aptoLocacao) setTotalDebitos(controle.calcularDebitos(getCPF()));
     }
@@ -46,7 +43,7 @@ public class Cliente {
         this.totalDebitos = valor;
     }
 
-    public double getTotalDebitos(AcessoFinanceiro controle) {
+    public double getTotalDebitos(ServicoFinanceiro controle) {
         atualizarDadosFinanceiros(controle);
         return this.totalDebitos;
     }
