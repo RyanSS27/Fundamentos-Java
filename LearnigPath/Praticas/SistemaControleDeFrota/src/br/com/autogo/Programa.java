@@ -28,8 +28,6 @@ public class Programa {
             System.out.println(preparacao(vrumVrum));
         }
 
-        RepositorioDebitoImpl repositorioPedidos = new RepositorioDebitoImpl();
-
         System.out.println(checkup(frotaParaConcerto.get(0)));
         int opt = 0;
         while (opt != 5) {
@@ -164,7 +162,7 @@ public class Programa {
                             case 1 -> {
                                 System.out.print("Digite o cpf: ");
                                 long cpf = sc.nextLong();
-                                Pedido pedido = repositorioPedidos.procurarPedido(cpf, false);
+                                Pedido pedido = repositorioDebitos.procurarPedido(cpf, false);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
@@ -177,7 +175,7 @@ public class Programa {
                             case 2 -> {
                                 System.out.print("Informe a placa do veículo: ");
                                 String placa = sc.nextLine();
-                                Pedido pedido = repositorioPedidos.procurarPedido(placa, false);
+                                Pedido pedido = repositorioDebitos.procurarPedido(placa, false);
                                 if (pedido == null) {
                                     System.out.println("Pedido não encontrado.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();
@@ -188,7 +186,7 @@ public class Programa {
                             }
 
                             case 3 -> {
-                                List<Debito> pedidos = repositorioPedidos.listarPedidos(false);
+                                List<Debito> pedidos = repositorioDebitos.listarPedidos(false);
                                 if (pedidos.isEmpty()) {
                                     System.out.println("Não há pedidos registrados.\nDê \"Enter\" para seguir.");
                                     sc.nextLine();

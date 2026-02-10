@@ -6,6 +6,6 @@ public interface Veiculo {
     float abastecer(float litros);
     void serConsertado();
     void lavar();
-    void serAlugado(Cliente locatario);
+    boolean serAlugado(Cliente locatario);
     void retornar();
 }

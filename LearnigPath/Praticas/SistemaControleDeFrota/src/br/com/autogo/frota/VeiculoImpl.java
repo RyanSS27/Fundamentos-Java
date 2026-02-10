@@ -54,6 +54,10 @@ public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
 
     @Override
     public float abastecer(float litros) {
+        if (litros <= 0) {
+            System.err.println("Quantidade de litros inválida para abastecimento.");
+            return 0;
+        }
         float espacoLivre = capacidadeMaximaTanque - tanque;
         /*
             Nota particular:
@@ -83,14 +87,16 @@ public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
     }
 
     @Override
-    public void serAlugado(Cliente locatario) {
+    public boolean serAlugado(Cliente locatario) {
         if (isEmCondicaoDeUso()) {
             setEmLocacao(true);
             setLocatario(locatario);
             this.setLimpo(false);
             setEmCondicaoDeUso();
+            return true;
         } else {
             System.out.println("O veículo não pode ser alugado.");
+            return false;
         }
     }
 
@@ -150,7 +156,9 @@ public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
     }
 
     public void setQtdeMaxOcupantes(int qtdeMaxOcupantes) {
-        this.qtdeMaxOcupantes = qtdeMaxOcupantes;
+        // Pode gerar problemas de veículos com0 ocupantes por não tratar o erro,
+        // mas esta decisão foi tomada apenas para facilitar o andamento do projeto
+        if (qtdeMaxOcupantes > 0) this.qtdeMaxOcupantes = qtdeMaxOcupantes;
     }
 
     public float getCapacidadeMaximaTanque() {
@@ -202,8 +210,8 @@ public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
     }
 
     public boolean isEmCondicaoDeUso() {
-        this.setEmCondicaoDeUso();
-        return emCondicaoDeUso;
+        return (getTanquePorcentagem() >= (Oficina.CAPACIDADE_MINIMA_GASOLINA_LOCACAO * 10))
+                && !this.emManutencao && this.limpo && !this.quebrado && !emLocacao;
     }
 
     public void setEmCondicaoDeUso() {
@@ -216,7 +224,11 @@ public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
     }
 
     public void setQuilometragem(float quilometragem) {
-        this.quilometragem = quilometragem;
+        if (quilometragem >= this.quilometragem) {
+            this.quilometragem = quilometragem;
+        } else {
+            System.err.println("Erro: A nova quilometragem não pode ser menor que a atual.");
+        }
     }
 
     public float getValor() {
@@ -224,7 +236,7 @@ public class VeiculoImpl implements Veiculo, Comparable<VeiculoImpl> {
     }
 
     public void setValor(float valor) {
-        this.valor = valor;
+        if (valor >= 0) this.valor = valor;
     }
 
     public float getTaxaDesvalorizacao() {
