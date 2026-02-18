@@ -1,0 +1,80 @@
+# Comandos de Date-Time
+Guia de consulta rápida de comandos básicos de data-hora e duração entre dois períodos.
+
+## Instanciando datas
+- **Data-hora do momento presente**
+
+        LocalDate d1 = LocalDate.now();
+        LocalDateTime dt1 = LocalDateTime.now();
+
+        Instant i = Instant.now(); 
+        // yyyy-MM-ddTHH:mm:ssZ ("Z" indica o fuso padrão UTC)
+
+- **Criando a partir de Strings**
+
+        LocalDate d1 = LocalDate.parse("2026-02-11");
+        LocalDateTime dt1 = LocalDateTime.parse("2050-10-27T20:00");
+        Instant i = Instant.parse("1900-10-27T20:30:00Z");
+
+- **Instanciando passando parâmetros**
+
+        LocalDateTime dataHora = LocalDateTime.of(2026, 2, 18);
+
+## Criando patterns 
+- **Instanciando com patterns**
+
+        DateTimeFormatter format1 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime d1 = LocalDateTime.parse("27/10/2006 12:30", format1);
+
+- **Exibindo com patterns**
+
+    A classe DateTimeFormatter possui métodos que formatam datas.
+
+        System.out.println(format1.format(data));
+
+## Convertendo entre local e global
+- **Local para global**
+
+        Instant dataConvertida = dataOriginal.atZone(ZoneId.systemDefault()).toInstant();
+
+- **Global para local**
+
+        LocalDateTime dataConvertida = LocalDateTime.ofInstant(dataGlobal, ZoneId.of("America/Sao_Paulo"));
+
+## Operações com LocalDate, LocalDateTime e Instant
+Como informações de data-hora são imutáveis, deve-se criar uma nova variável para armazenar o resultado da operação.
+
+- **Operações com LocalDate e LocalDateTime**
+
+        LocalDate semanaSeguinte = dataBase.plus(1, ChronoUnit.WEEKS);
+        LocalDate semanaAnterior = dataBase.minus(1, ChronoUnit.WEEKS);
+        // Parâmetros: (valor, unidade de tempo)
+
+        ou
+
+        LocalDate semanaSeguinte = dataBase.plusWeeks(1);
+        LocalDate semanaAnterior = dataBase.minusWeeks(1);
+
+- **Operações com Instant**
+
+    Não podem ser utilizadas unidades como WEEKS, MONTHS ou YEARS, pois o Instant suporta apenas unidades baseadas em duração (dias, horas, minutos, segundos, etc.).
+
+        Instant instantProximaSemana = dataBaseInstant.plus(7, ChronoUnit.DAYS);
+
+## Capturando a duração entre dois períodos
+### Instanciando o Duration
+- **LocalDateTime e Instant**
+
+        Duration d = Duration.between(data1, data2);
+
+- **LocalDate**
+
+    Caso queira obter a duração entre dois LocalDate, é necessário especificar hora e segundos. Pode-se usar `.atStartOfDay()`, que considera o horário 00:00, ou realizar uma conversão.
+
+        Duration duration1 = Duration.between(agora.atStartOfDay(), birthDayDate.atStartOfDay());
+
+### Utilizando os métodos da classe
+
+        duration1.toDays();
+        duration1.toHours();
+        duration1.toMinutes();
