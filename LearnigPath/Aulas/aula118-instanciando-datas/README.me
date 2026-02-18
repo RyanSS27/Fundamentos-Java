@@ -1,12 +1,12 @@
-# Comandos de Date-Time
-Guia de consulta rápida de comandos básicos de data-hora e duração entre dois períodos.
+# Guia de Referência: Java Date-Time (`java.time`)
 
-## Instanciando datas
-- **Data-hora do momento presente**
+Guia de consulta rápida focado em boas práticas e comandos essenciais da API de data e hora do Java.
 
+---
+
+## 1. Instanciando Datas
+### Data-hora do momento presente
 ```java
-LocalDate d1 = LocalDate.now();
-LocalDateTime dt1 = LocalDateTime.now();
-
-Instant i = Instant.now(); 
-// yyyy-MM-ddTHH:mm:ssZ ("Z" indica o fuso padrão UTC)
+LocalDate d1 = LocalDate.now();               // Apenas data: 2026-02-18
+LocalDateTime dt1 = LocalDateTime.now();     // Data e hora: 2026-02-18T19:45:00
+Instant i1 = Instant.now();                  // Padrão UTC: 2026-02-18T22:45:00Z
