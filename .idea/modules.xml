@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/01primeirosPassos/01primeirosPassos.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/01primeirosPassos/01primeirosPassos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Alura/2914-java-screenmatch-listas-colecoes-aula01/2914-java-screenmatch-listas-colecoes-aula01.iml" filepath="$PROJECT_DIR$/LearningPath/Alura/2914-java-screenmatch-listas-colecoes-aula01/2914-java-screenmatch-listas-colecoes-aula01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Fundamentos-Java.iml" filepath="$PROJECT_DIR$/.idea/Fundamentos-Java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Praticas/PlayStation2/PlayStation2.iml" filepath="$PROJECT_DIR$/LearningPath/Praticas/PlayStation2/PlayStation2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Praticas/SistemaControleDeFrota/SistemaControleDeFrota.iml" filepath="$PROJECT_DIR$/LearningPath/Praticas/SistemaControleDeFrota/SistemaControleDeFrota.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/agendador-reunioes/agendador-reunioes.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/agendador-reunioes/agendador-reunioes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula024-27entrada-processamento-de-dados/aula024-25-26-27entradaProcessamentoDeDados.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula024-27entrada-processamento-de-dados/aula024-25-26-27entradaProcessamentoDeDados.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula024-exercicio-fixacao/aula024-exercicio-fixacao.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula024-exercicio-fixacao/aula024-exercicio-fixacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula028-funcoes-matematicas/aula028-funcoes-matematicas.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula028-funcoes-matematicas/aula028-funcoes-matematicas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula029-exercicios-Iniciantes/aula029-exercicios-Iniciantes.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula029-exercicios-Iniciantes/aula029-exercicios-Iniciantes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula059-formatando-Strings/aula059-formatando-Strings.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula059-formatando-Strings/aula059-formatando-Strings.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula064-problema-sem-orientacao-objetos/aula064-problema-sem-orientacao-objetos.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula064-problema-sem-orientacao-objetos/aula064-problema-sem-orientacao-objetos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula071-teste-pessoal/aula071-teste-pessoal.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula071-teste-pessoal/aula071-teste-pessoal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula073-exercicio-fixacao/aula073-exercicio-fixacao.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula073-exercicio-fixacao/aula073-exercicio-fixacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula099-exercicios-arrays/aula099-exercicios-arrays.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula099-exercicios-arrays/aula099-exercicios-arrays.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula107-exercicio-listas/aula107-exercicio-listas.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula107-exercicio-listas/aula107-exercicio-listas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula108-listas/aula108-listas.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula108-listas/aula108-listas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Aulas/aula118-121-data-hora/aula118-instanciando-datas.iml" filepath="$PROJECT_DIR$/LearningPath/Aulas/aula118-121-data-hora/aula118-instanciando-datas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/aula77membrosEstaticos/aula77membrosEstaticos.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/aula77membrosEstaticos/aula77membrosEstaticos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/aula79exerciciosFixacao/aula79exerciciosFixacao.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/aula79exerciciosFixacao/aula79exerciciosFixacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java02/java02.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java02/java02.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java03/java03.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java03/java03.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java04/java04.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java04/java04.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java06-encapsulamento/java06-encapsulamento.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java06-encapsulamento/java06-encapsulamento.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java07-08-relacionamento-entre-classes/java07-08-relacionamento-entre-classes.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java07-08-relacionamento-entre-classes/java07-08-relacionamento-entre-classes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java10-heranca-parte1/java10-heranca-parte1.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java10-heranca-parte1/java10-heranca-parte1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java11-12-heranca-parte2-polimorfismo-sobreposicao/java11-12-heranca-parte2-polimorfismo-sobreposicao.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java11-12-heranca-parte2-polimorfismo-sobreposicao/java11-12-heranca-parte2-polimorfismo-sobreposicao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java13-polimorfismo-sobrecarga/java13-polimorfismo-sobrecarga.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java13-polimorfismo-sobrecarga/java13-polimorfismo-sobrecarga.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java14-projeto-final/java14-projeto-final.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java14-projeto-final/java14-projeto-final.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Estudos de POO/java9-exercicio-pratico/java9-exercicio-pratico.iml" filepath="$PROJECT_DIR$/LearningPath/Estudos de POO/java9-exercicio-pratico/java9-exercicio-pratico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Alura/jogo-da-adivinhacao/jogo-da-adivinhacao.iml" filepath="$PROJECT_DIR$/LearningPath/Alura/jogo-da-adivinhacao/jogo-da-adivinhacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LearningPath/Praticas/untitled/untitled.iml" filepath="$PROJECT_DIR$/LearningPath/Praticas/untitled/untitled.iml" />
+    </modules>
+  </component>
+</project>
