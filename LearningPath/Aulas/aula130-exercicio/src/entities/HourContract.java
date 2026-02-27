@@ -3,16 +3,15 @@ package entities;
 import java.time.LocalDate;
 
 public class HourContract {
-    private LocalDate date;
-    private double valuePerHour;
-    private int hours;
+    private final LocalDate date;
+    private final double valuePerHour;
+    private final int hours;
 
     public HourContract(LocalDate date, double valuePerHour, int hours) {
         this.date = date;
         this.valuePerHour = valuePerHour;
         this.hours = hours;
     }
-
 
     public double totalValue(){
      return valuePerHour * hours;
@@ -21,25 +20,5 @@ public class HourContract {
     // Getters e Setters
     public LocalDate getDate() {
         return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public double getValuePerHour() {
-        return valuePerHour;
-    }
-
-    public void setValuePerHour(double valuePerHour) {
-        this.valuePerHour = valuePerHour;
-    }
-
-    public int getHours() {
-        return hours;
-    }
-
-    public void setHours(Integer hours) {
-        this.hours = hours;
     }
 }
