@@ -20,7 +20,9 @@ public class principalComBusca {
         /*
         CONEXÃO COM A API
          */
-        String enderecoAPI = "https://www.omdbapi.com/?apikey=9dbd6ddb&t=";
+    String endPoint = "https://www.omdbapi.com/";
+        String key = "sua-key";
+        String enderecoAPI = endPoint + "?apikey=" + key + "&t=";
         System.out.println("Digite o nome do título que deseja em inglês:");
         enderecoAPI += sc.nextLine().trim().replace(" ", "+");
         System.out.println(enderecoAPI);
