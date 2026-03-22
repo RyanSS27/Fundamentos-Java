@@ -20,20 +20,22 @@ public class Biblioteca {
         url += "&key=" + key;
         System.out.println(url);
 
-        // Declaração do client
+        // Declaração do client (aquele que vai até a API)
         HttpClient client = HttpClient.newHttpClient();
-        // Efetua a requisição
+        // Monta a requisição (como se fosse a lita de desejos)
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
 
-        // Resposta http, do tipo request
+        // Inicia a requisição com o '.send(request, ...)' e guarda a response (resposta)
         HttpResponse<String> response = client
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
         // .body() é o corpo/json
         System.out.println(response.body());
 
+        // Ao que entendi, o .send(request, ...) "manda" o client até a API para que ele entregue o
+        // pedido (HttpRequest) e retorne com os itens desejados (response)
         sc.close();
     }
 }
