@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/users") // nomeei este recurso de usuário
 public class UserResource {
 
-    @GetMapping // responde requisições get
-    public ResponseEntity<User> retorneTodos() {
-        User u = new User(1L, "Ryan", "fogarelGratis@gmailcom", "(98) 29857-3389", "1234");
-        return ResponseEntity.ok().body(u); // corpo da resposta deve conter u
-    }
+//    @GetMapping // responde requisições get
+//    public ResponseEntity<User> retorneTodos() {
+//        return ResponseEntity.ok().body(); // corpo da resposta deve conter u
+//    }
     // diz que a resposta é do tipo usuário
 }
