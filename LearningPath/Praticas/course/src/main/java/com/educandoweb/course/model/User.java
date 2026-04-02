@@ -1,5 +1,6 @@
 package com.educandoweb.course.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +9,17 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@Entity
+@Table(name =  "tb_users")
 public class User implements Serializable {
     /*
         A interface Serializable permite que o objeto seja transformado em
         cadeias de bytes. Trafegando pela rede, seja gravado em arquivos, etc
      */
     private static final long serialVersionID = 1;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String email;
