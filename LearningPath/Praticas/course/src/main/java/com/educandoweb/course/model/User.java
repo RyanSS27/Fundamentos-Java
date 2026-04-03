@@ -1,10 +1,13 @@
 package com.educandoweb.course.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -25,6 +28,10 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String password;
+
+    @Setter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "client") // está sendo mapeado pelo atributo "client" de Order
+    private List<Order> orders = new ArrayList<>(); // coleção deve ter somente o get
 
     public User() {} // Obrigado a se colocar por conta do Framework
 
