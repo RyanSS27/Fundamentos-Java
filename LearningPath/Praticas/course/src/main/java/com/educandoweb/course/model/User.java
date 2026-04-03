@@ -1,5 +1,6 @@
 package com.educandoweb.course.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class User implements Serializable {
     private String phone;
     private String password;
 
+    @JsonIgnore
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "client") // está sendo mapeado pelo atributo "client" de Order
     private List<Order> orders = new ArrayList<>(); // coleção deve ter somente o get

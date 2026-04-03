@@ -1,12 +1,17 @@
 package com.educandoweb.course.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_orders")
 public class Order implements Serializable {
@@ -14,12 +19,21 @@ public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private Instant moment;
 
+    @Setter(AccessLevel.NONE)
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    public Order(Long id, Instant moment, User client) {
+        this.id = id;
+        this.moment = moment;
+        this.client = client;
+    }
+
+    public Order() {}
 
     @Override
     public boolean equals(Object o) {
