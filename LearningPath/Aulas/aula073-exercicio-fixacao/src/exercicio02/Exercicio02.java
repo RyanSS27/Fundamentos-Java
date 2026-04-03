@@ -1,12 +1,14 @@
 package exercicio02;
 
+import java.util.Arrays;
+
 public class Exercicio02 {
     public static void main(String[] args) {
-        Aluno alunos[] = {
+        Aluno[] alunos = {
                 new Aluno("Mano 1"),
                 new Aluno("Mano 2")
         };
-
+        System.out.println(Arrays.toString(alunos));
         System.out.println(alunos[0].mediasSemestre(1, 10.0d, 9.5d, 6.0));
         System.out.println(alunos[0].mediasSemestre(2, 7.75, 6.0d, 8.0d));
         System.out.println(alunos[0].mediasSemestre(3, 9.0d, 3.5d, 6.0));

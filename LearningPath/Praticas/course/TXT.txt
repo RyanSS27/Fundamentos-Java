@@ -1,6 +1,9 @@
 ANOTAÇÕES DO PROJETO
 ====================
 Pesquisar sobre:
+	- JPA
+	- Database seeding (popular o bd)
 
 ANOTAÇÕES
+
 

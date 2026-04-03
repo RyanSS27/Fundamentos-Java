@@ -55,7 +55,6 @@ public class Parte1 {
         listCompras.add("Lâmpada");
         listCompras.add("Linguiça");
         Collections.sort(listCompras, Collections.reverseOrder());
-        listCompras.forEach(item -> System.out.println(item));
-
+        listCompras.forEach(item -> System.out.println((listCompras.indexOf(item) + 1) + ". " + item));
     }
 }
