@@ -1,5 +1,6 @@
 package com.educandoweb.course.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,11 +21,13 @@ public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssZ", timezone = "GMT")
     private Instant moment;
 
     @Setter(AccessLevel.NONE)
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id") // nome da foreign key no BD
     private User client;
 
     public Order(Long id, Instant moment, User client) {

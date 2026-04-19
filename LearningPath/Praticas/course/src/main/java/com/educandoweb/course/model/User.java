@@ -30,7 +30,7 @@ public class User implements Serializable {
     private String phone;
     private String password;
 
-    @JsonIgnore
+    @JsonIgnore // evita que o Jckson consiga chamar os pedidos do usuário
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "client") // está sendo mapeado pelo atributo "client" de Order
     private List<Order> orders = new ArrayList<>(); // coleção deve ter somente o get
