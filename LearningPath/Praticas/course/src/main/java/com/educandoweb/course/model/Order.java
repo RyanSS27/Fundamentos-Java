@@ -18,6 +18,7 @@ import java.util.Objects;
 public class Order implements Serializable {
     private static final Long serialVersionID = 1L;
 
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

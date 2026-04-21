@@ -22,6 +22,7 @@ public class User implements Serializable {
      */
     private static final long serialVersionID = 1;
 
+    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
