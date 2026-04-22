@@ -1,5 +1,6 @@
 package com.educandoweb.course.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "tb_product_category")
+@Table(name = "tb_category")
 public class Category implements Serializable {
     private static final Long serialVersionID = 1L;
 
@@ -24,13 +25,10 @@ public class Category implements Serializable {
 
     @Column(nullable = false)
     private String name;
-    
-// >>AINDA NÃO REALIZADA A ASSOCIAÇÃO ENTRE AS CLASSES<<
-//    @Transient
-//    @Setter(AccessLevel.NONE)
-//    @ManyToMany
-//    @JoinColumn(name = "product_id")
-//    private Set<Product> products = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "categories") // nome da coleção em products
+    private Set<Product> products = new HashSet<>();
 
     public Category() {}
 

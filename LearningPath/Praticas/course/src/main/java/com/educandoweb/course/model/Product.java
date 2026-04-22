@@ -29,15 +29,18 @@ public class Product implements Serializable {
     private String description;
     private Double price;
 
-    // >>AINDA NÃO REALIZADA A ASSOCIAÇÃO ENTRE AS CLASSES<<
     /*
         Set cria conjuntos, onde não há duplicidade de itens.
         Deve-se instanciar um "HashSet", pois "Set" é uma interface
      */
-//    @Transient
-//    @Setter(AccessLevel.NONE)
-//    @OneToMany(mappedBy = "product")
-//    private Set<Category> categories = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            // Cria uma tabela de associação entre os IDs
+            name = "tb_product_category", // nome da tb de associação
+            joinColumns = @JoinColumn(name = "product_id"), // nome da column da nova tb
+            inverseJoinColumns = @JoinColumn(name = "category_id") // nome da column da nova tb
+    )
+    private Set<Category> categories = new HashSet<>();
 
     @Column(name = "img_url", nullable = true)
     private String imgUrl;
