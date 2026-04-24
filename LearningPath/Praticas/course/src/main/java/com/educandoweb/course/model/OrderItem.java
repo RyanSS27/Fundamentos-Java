@@ -1,6 +1,7 @@
 package com.educandoweb.course.model;
 
 import com.educandoweb.course.model.pk.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -20,10 +21,18 @@ import java.util.Objects;
 public class OrderItem implements Serializable {
     private static final long serialVersionID = 1L;
 
+    /*
+        No paradigma de POO, não existe chave primária composta,
+        o identificador do objeto deve ser 1 só.
+
+        Como o par produto e pedido é o que identifica OrderItem,
+        eu preciso criar essa classe auxiliar OrderItemPK para
+        representar isto.
+    */
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    @EmbeddedId
-    private OrderItemPK id;
+    @EmbeddedId // 'Id integrado'
+    private OrderItemPK id = new OrderItemPK();
 
     private Integer quantity;
 
@@ -43,9 +52,10 @@ public class OrderItem implements Serializable {
     /*
         GETTERS E SETTERS DO PRODUCT E ORDER
 
-        Temos que fazer, pois para o mundo exterior, OrderItem
+        Temos que fazer, pois para o mundo exterior, é OrderItem
         contém as informações de produto e de pedido
     */
+    @JsonIgnore // evitar a chamada cíclica
     public Order getOrder() {
         return id.getOrder();
     }

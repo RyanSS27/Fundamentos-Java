@@ -2,6 +2,7 @@ package com.educandoweb.course.model;
 
 import com.educandoweb.course.model.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +10,9 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -34,6 +37,16 @@ public class Order implements Serializable {
     @ManyToOne
     @JoinColumn(name = "client_id") // nome da foreign key no BD
     private User client;
+
+    @OneToMany(mappedBy = "id.order")
+    /*
+        Dizemos ao JPa para olhar dentro do tipo do Set ('OrderItem'). Dentro do tipo, ele encontrará o id com
+        a notação '@EmbeddedId', entendendo que é uma primary key composta e que, dentro dela, há a conexão entre
+        as colunas.
+
+        A conexão entre as colunas (join) já foi definida lá, por isso não precisa ser definida aqui.
+     */
+    private Set<OrderItem> items = new HashSet<>();
 
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;

@@ -14,7 +14,14 @@ import java.util.Objects;
 @Getter
 @Setter
 /*
-    Por ser uma classe auxiliar de primary key composta
+    PK: pois é uma classe auxiliar de primary key composta.
+
+    No banco de dados essa é uma tabela de associação que
+    carrega atributos extras que não são de Product nem de
+    Order.
+
+    Ex: quantidade do item que foi comprada e o preço do
+    produto na época em que foi comprado
 */
 @Embeddable //
 public class OrderItemPK implements Serializable {

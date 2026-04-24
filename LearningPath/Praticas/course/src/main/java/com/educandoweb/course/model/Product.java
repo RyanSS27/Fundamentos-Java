@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
 
     /*
         Set cria conjuntos, onde não há duplicidade de itens.
@@ -47,7 +48,7 @@ public class Product implements Serializable {
 
     public Product() {}
 
-    public Product(Long id, String name, String description, Double price, String imgUrl) {
+    public Product(Long id, String name, String description, BigDecimal price, String imgUrl) {
         this.Id = id;
         this.name = name;
         this.description = description;
