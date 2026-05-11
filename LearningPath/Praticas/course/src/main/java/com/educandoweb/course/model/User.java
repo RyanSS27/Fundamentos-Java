@@ -1,10 +1,12 @@
 package com.educandoweb.course.model;
 
+import com.educandoweb.course.dto.UserDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class User implements Serializable {
     private String name;
     private String email;
     private String phone;
-    private String password;
+    private String password; // depois criptografar
 
     @JsonIgnore // evita que o Jckson consiga chamar os pedidos do usuário
     @Setter(AccessLevel.NONE)
@@ -45,6 +47,10 @@ public class User implements Serializable {
         this.email = email;
         this.phone = phone;
         this.password = password;
+    }
+
+    public User(UserDTO userDTO) {
+        BeanUtils.copyProperties(userDTO, this);
     }
 
     @Override

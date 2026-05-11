@@ -1,9 +1,11 @@
 package com.educandoweb.course.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 @Getter
 @Setter
 @Entity
@@ -29,6 +32,10 @@ public class Product implements Serializable {
     private String name;
     private String description;
     private BigDecimal price;
+
+    @Getter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     /*
         Set cria conjuntos, onde não há duplicidade de itens.
@@ -54,6 +61,15 @@ public class Product implements Serializable {
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
+    }
+
+    @JsonIgnore
+    public Set<Order> getOrders() {
+        Set<Order> orders = new HashSet<>();
+        for (OrderItem x: this.orderItems)
+            orders.add(x.getOrder());
+
+        return orders;
     }
 
     @Override

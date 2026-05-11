@@ -1,5 +1,6 @@
 package com.educandoweb.course.controller;
 
+import com.educandoweb.course.dto.UserDTO;
 import com.educandoweb.course.model.User;
 import com.educandoweb.course.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,15 @@ public class UserResource {
     private UserService userService;
 
     @GetMapping // responde requisições get
-    public ResponseEntity<List<User>> retorneTodos() {
-        List<User> list = userService.findAll();
+    public ResponseEntity<List<UserDTO>> retorneTodos() {
+        List<UserDTO> list = userService.findAll();
 
         return ResponseEntity.ok().body(list); // corpo da resposta deve conter as respostas
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> retornePorId(@PathVariable Long id) {
-        User user = userService.findById(id);
+    public ResponseEntity<UserDTO> retornePorId(@PathVariable Long id) {
+        UserDTO user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
     // diz que a resposta é do tipo usuário

@@ -2,10 +2,7 @@ package com.educandoweb.course.model;
 
 import com.educandoweb.course.model.pk.OrderItemPK;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +35,6 @@ public class OrderItem implements Serializable {
     @Column(nullable = false)
     private Integer quantity;
     private BigDecimal price;
-
 
     public OrderItem() {
     }

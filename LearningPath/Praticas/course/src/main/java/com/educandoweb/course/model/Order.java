@@ -46,7 +46,7 @@ public class Order implements Serializable {
 
         A conexão entre as colunas (join) já foi definida lá, por isso não precisa ser definida aqui.
      */
-    private Set<OrderItem> items = new HashSet<>();
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;
@@ -67,10 +67,9 @@ public class Order implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id;
+        return Objects.equals(id, order.id);
     }
 
     @Override
