@@ -33,7 +33,7 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String password; // depois criptografar
-    
+
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "client") // está sendo mapeado pelo atributo "client" de Order
     private List<Order> orders = new ArrayList<>(); // coleção deve ter somente o get
